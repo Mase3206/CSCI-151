@@ -1,0 +1,5 @@
+{
+  "name": "Fedora",  
+  "image": "fedora:39",
+"onCreateCommand": "dnf update -y && dnf upgrade -y && dnf install which git gh -y"
+}
