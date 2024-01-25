@@ -44,4 +44,4 @@ def main():
 
 if __name__ == '__main__':
 	# if calling directly from the CLI, run the main() function
-    main()
+	main()
