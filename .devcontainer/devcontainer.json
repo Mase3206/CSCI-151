@@ -5,14 +5,15 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-			"njpwerner.autodocstring",
-			"GitHub.vscode-pull-request-github",
-			"eamodio.gitlens",
-			"VisualStudioExptTeam.vscodeintellicode",
-			"VisualStudioExptTeam.intellicode-api-usage-examples",
-			"ms-python.vscode-pylance",
-			"ms-python.python",
-			"donjayamanne.python-environment-manager"
+				"njpwerner.autodocstring",
+				"GitHub.vscode-pull-request-github",
+				"eamodio.gitlens",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"VisualStudioExptTeam.intellicode-api-usage-examples",
+				"ms-python.vscode-pylance",
+				"ms-python.python",
+				"donjayamanne.python-environment-manager",
+				"whosydd.snippet-creator"
 			]
 		}
 	}
