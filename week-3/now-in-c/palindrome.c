@@ -83,7 +83,7 @@ int is_palindrome(char *message) {
 	int message_length;
 	message_length = strlen(message);
 
-
+	// TODO: is reversed_message_punctless == message_punctless?
 }
 
 
@@ -94,7 +94,7 @@ int is_exact(char *message) {
 
 	char *flipped = reverse_array(message);
 
-
+	// TODO: is reversed_message == message?
 
 	return 1;
 }
