@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 
+# =============================================================================
+# palindrome.py
+#
+# Give it a word, phrase, or sentence, and it will determine if it is a 
+# palindrome and what kind it is.
+#
+# Noah S. Roberts
+# 01/29/2024
+# Section 1
+# for Week 3
+# Book Excercise ?
+# =============================================================================
+
 import stdio, sys
 
 
