@@ -1,7 +1,7 @@
 {
 	"name": "Fedora",  
 	"image": "fedora:39",
-	"onCreateCommand": "dnf upgrade --refresh -y && dnf install which git gh wget unzip python3-pip python3-tkinter -y && pip install --upgrade pip && pip install setuptools numpy pygame && ln -s /usr/bin/python3 /usr/bin/python && wget https://introcs.cs.princeton.edu/python/code/dist/introcs-1.0.zip && unzip introcs-1.0.zip && cd introcs && python setup.py install --user && cd .. && rm introcs* -rf",
+	"onCreateCommand": "dnf install wget -y && wget \"https://raw.githubusercontent.com/Mase3206/hostthis/main/setup.sh\" && chmod +x setup.sh && ./setup.sh",
 	"customizations": {
 		"vscode": {
 			"extensions": [
