@@ -102,20 +102,22 @@ if __name__ == '__main__':
 
 
 
-
+# =============================================================================
 # Expected output
-"""
-> python boysandgirls.py 1000
-Avg # children: 3
-Trials with 2 children: 490
-Trials with 3 children: 260
-Trials with 4 children: 143
-Trials with 5 or more children: 107
-
-> python boysandgirls.py 1000
-Avg # children: 3
-Trials with 2 children: 509
-Trials with 3 children: 245
-Trials with 4 children: 119
-Trials with 5 or more children: 127
-"""
+# -----------------------------------------------------------------------------
+#
+# > python boysandgirls.py 1000
+#   Avg # children: 3
+#   Trials with 2 children: 490
+#   Trials with 3 children: 260
+#   Trials with 4 children: 143
+#   Trials with 5 or more children: 107
+# 
+# > python boysandgirls.py 1000
+#   Avg # children: 3
+#   Trials with 2 children: 509
+#   Trials with 3 children: 245
+#   Trials with 4 children: 119
+#   Trials with 5 or more children: 127
+#
+# =============================================================================

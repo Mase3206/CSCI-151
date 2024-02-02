@@ -12,7 +12,7 @@
 # Book Excercise ???
 # =============================================================================
 
-import stdio, stdarray, random, sys, threading
+import stdio, stdarray, random, sys, concurrent.futures
 
 
 debug = False
@@ -21,6 +21,10 @@ debugTrials = 1
 
 def avg(l:list):
 	return float(sum(l) / len(l))
+
+
+class FloatToIntWarning(UserWarning):
+	pass
 
 
 def oneTrial():
@@ -47,15 +51,28 @@ def oneTrial():
 
 
 
-def simulate(trials:int):
-	# create an array `counts` of length `trials`
-	counts = stdarray.create1D(trials, 0)
+def worker(trialPart:int):
+	counts = stdarray.create1D(trialPart, 0)
 
 	# run a trial `trials` times and set trial `i` to `counts[i]`
-	for i in range(trials):
+	for i in range(trialPart):
 		counts[i] = oneTrial()
-	
+
 	return counts
+
+
+
+def simulate(trials:int, threads=1):
+	if threads < 1:
+		raise ValueError(f"Thread count must be more than 1. Given: {threads}")
+	if type(trials / threads) == float:
+		raise FloatToIntWarning(f"Given number of trials and threads is not evenly divisible. Trial count per thread will be rounded down to nearest int. Total resulting trials: {(trials // threads) * threads}")
+	
+	# create an array `counts` of length `trials`
+	workerCounts = stdarray.create1D(threads, 0)
+
+	with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as worker:
+		worker.submit(trials // threads)
 
 
 
