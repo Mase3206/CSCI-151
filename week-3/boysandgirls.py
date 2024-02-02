@@ -47,10 +47,7 @@ def oneTrial():
 
 
 
-def simulate(trials:int, threads=0):
-	if threads < 1:
-		raise ValueError(f"Thread count must not be less than one. Given: {threads}")
-
+def simulate(trials:int):
 	# create an array `counts` of length `trials`
 	counts = stdarray.create1D(trials, 0)
 
