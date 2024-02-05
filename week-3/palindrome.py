@@ -19,6 +19,19 @@ import stdio, sys
 # Strip the punctuation from the message
 # Only called if palindrome is inexact
 def stripPunct(message:list):
+	"""
+	Strip punctuation
+	=================
+	Strips the punctuation characters from the given message list
+
+	Argument
+	--------
+		`message` : list of characters that may contain punctuation
+
+	Return
+	------
+		list of only non-punctuation characters
+	"""
 	punct = [',', '.', ':', ';', "'", '"', '!', '?', '/', '\\', ' ', '-', '–', '—']
 	punctless = []
 
@@ -31,6 +44,19 @@ def stripPunct(message:list):
 
 # Checks if the message is an inexact palindrome
 def isInexactPalindrome(message:list):
+	"""
+	Test - Inexact Palindrome
+	=========================
+	Tests if the message list is an inexact palindrome by stripping the punctuation characters and comparing its reverse. If any character is different in the reverse, it returns False. If all are identical in the reverse, it returns True.
+
+	Argument
+	--------
+		`message` : list of characters
+
+	Return
+	------
+		bool : True if all `messagePunctless[i]` and `reversedPunctless[i]` are identical
+	"""
 	punctless = stripPunct(message)
 	reverse = list(reversed(punctless))
 
@@ -45,6 +71,19 @@ def isInexactPalindrome(message:list):
 # Checks if the message is an exact palindrome
 # If not, it passes the message off to isInexactPalindrome()
 def isExact(message:list):
+	"""
+	Test - Exact Palindrome
+	=======================
+	Tests if the message list is an exact palindrome by iterating through the reverse of the message, including the punctuation. If any character is different in the reverse, it marks return dict key "isExact" False and passes the message off to `isInexactPalindrome(message)`. If all characters are identical in the reverse, both keys in the return dict are True.
+	
+	Argument
+	--------
+		`message` : list of characters
+
+	Return
+	------
+		dict : key[0] = return of `isInexactPalindrome(message)` or False; key[1] = True if all `message[i]` and `reversed[i]` are identical
+	"""
 	reverse = list(reversed(message))
 
 	for i in range(len(message)):
