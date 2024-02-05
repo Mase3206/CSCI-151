@@ -12,7 +12,7 @@
 # Book Excercise ???
 # =============================================================================
 
-import stdio, stdarray, random, sys, threading
+import stdio, stdarray, random, sys
 
 
 debug = False
@@ -25,7 +25,6 @@ def avg(l:list):
 
 def oneTrial():
 	# Initialize the `children` array with NoneType
-	# male = True; female = False (just makes comparisons easier)
 	children = stdarray.create1D(1, None)
 
 	# create the first child; will be used to compare against later children
