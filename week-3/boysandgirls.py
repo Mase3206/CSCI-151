@@ -65,10 +65,17 @@ def getFrequencies(counts:list):
 	# the `- 2` allows for simple indexing, as the minimum count is 2 and the minimum index is 0.
 	rawFrequencies = stdarray.create1D(max(counts) - 1, 0)
 	frequencies = stdarray.create1D(4, 0)
+	global totalChildren
 
 	for qty in counts:
 		rawFrequencies[qty - 2] += 1
 
+		if showTotalChildren:
+			totalChildren += [qty]
+	
+	if showTotalChildren:
+		stdio.writeln("Total children: " + str(sum(totalChildren)))
+		
 	# rawFrequencies may not have at least 4 elements, so only copy what's there
 	frequencies[0:min(3, len(rawFrequencies))] = rawFrequencies[0:min(3, len(rawFrequencies))]
 
@@ -89,6 +96,15 @@ if __name__ == '__main__':
 		trials = debugTrials
 	else:
 		trials = int(sys.argv[1])
+
+	global showTotalChildren, totalChildren
+	totalChildren = stdarray.create1D(0)
+	try:
+		if sys.argv[2] == '-t':
+			showTotalChildren = True
+	except IndexError:
+		showTotalChildren = False
+	
 	counts = simulate(trials)
 	frequencies = getFrequencies(counts)
 
@@ -113,11 +129,12 @@ if __name__ == '__main__':
 #   Trials with 4 children: 143
 #   Trials with 5 or more children: 107
 # 
-# > python boysandgirls.py 1000
+# > python boysandgirls.py 1000 -t
+#   Total children: 3025
 #   Avg # children: 3
-#   Trials with 2 children: 509
-#   Trials with 3 children: 245
-#   Trials with 4 children: 119
-#   Trials with 5 or more children: 127
+#   Trials with 2 children: 507
+#   Trials with 3 children: 241
+#   Trials with 4 children: 132
+#   Trials with 5 or more children: 120
 #
 # =============================================================================
