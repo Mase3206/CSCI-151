@@ -12,7 +12,8 @@
 				"ms-python.vscode-pylance",
 				"ms-python.python",
 				"donjayamanne.python-environment-manager",
-				"whosydd.snippet-creator"
+				"whosydd.snippet-creator",
+				"ms-python.isort"
 			]
 		}
 	}
