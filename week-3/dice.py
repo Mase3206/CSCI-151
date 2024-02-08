@@ -22,8 +22,8 @@ import stdio
 
 
 # set the number of trials
-# somewhere between 100,000,000 and 500,000,000 trials are required for
-# simulated probabilities to be within 3 decimal digits of exact probabilities
+# at least 500,000 trials are required for simulated probabilities to be within 
+# 3 decimal digits of exact probabilities
 debug = False
 if debug:
 	trials = 1000
@@ -82,8 +82,8 @@ def oneTrial():
 
 def simulate(trials:int):
 	sums = stdarray.create1D(trials, 0)
-	counts = stdarray.create1D(11, 0)
-	frequencies = stdarray.create1D(11, 0.0)
+	counts = stdarray.create1D(12, 0)
+	frequencies = stdarray.create1D(12, 0.0)
 
 	if showProgress:
 		stdio.writeln()
@@ -100,10 +100,12 @@ def simulate(trials:int):
 	
 	# sort each sum into `counts` based on its value
 	for val in sums:
-		counts[val - 2] += 1
+		counts[val - 1] += 1
 
 	# calculate frequencies from counts
-	frequencies = [(counts[j] / len(sums)) for j in range(len(counts))]
+	for j in range(len(counts)):
+		frequencies[j] = counts[j] / len(sums)
+	# frequencies = [(counts[j] / len(sums)) for j in range(len(counts))]
 	
 	# that's some stinky garbage
 	del counts, sums
@@ -133,7 +135,7 @@ frequencies = simulate(trials)
 # write simulated probabilities to stdout
 stdio.writeln('\nEmpirical results for each sum of two d6:')
 for i in range(2, 13):
-	stdio.writef('    sum = %s:   %7.5f\n', bufferNumber(i, 12), frequencies[i - 2])
+	stdio.writef('    sum = %s:   %7.5f\n', bufferNumber(i, 12), frequencies[i - 1])
 
 
 # write difference in exact and simulated probabilities to stdout
@@ -141,11 +143,11 @@ stdio.writeln('\nDifference in exact and empirical probabilities for each sum of
 stdio.writeln('(exact - simulated)')
 withinSpecCount = 0
 for i in range(2, 13):
-	stdio.writef('    sum = %s:  %8.5f', bufferNumber(i, 12), exactProbabilities[i] - frequencies[i - 2])
+	stdio.writef('    sum = %s:  %8.5f', bufferNumber(i, 12), exactProbabilities[i] - frequencies[i - 1])
 
 	# if the two are within three decimal places, write a check mark and newline to the end of that line
 	# if not, write a newline
-	if -0.0001 < exactProbabilities[i] - frequencies[i - 2] < 0.0001:
+	if -0.001 < exactProbabilities[i] - frequencies[i - 1] < 0.001:
 		stdio.writef(' %c\n', chr(0x2713))  # this prints the check mark
 		withinSpecCount += 1
 	else:
@@ -173,61 +175,61 @@ stdio.writeln('("within spec" means within three decimal places of each other)')
 #			sum = 12:   0.02778
 #
 #		Empirical results for each sum of two d6:
-#			sum = 2 :   0.03000
-#			sum = 3 :   0.05300
-#			sum = 4 :   0.08500
-#			sum = 5 :   0.11000
-#			sum = 6 :   0.14000
-#			sum = 7 :   0.19000
-#			sum = 8 :   0.12900
+#			sum = 2 :   0.03300
+#			sum = 3 :   0.05400
+#			sum = 4 :   0.09600
+#			sum = 5 :   0.10900
+#			sum = 6 :   0.12000
+#			sum = 7 :   0.18100
+#			sum = 8 :   0.13200
 #			sum = 9 :   0.11500
-#			sum = 10:   0.06000
-#			sum = 11:   0.06000
-#			sum = 12:   0.02800
+#			sum = 10:   0.08000
+#			sum = 11:   0.05900
+#			sum = 12:   0.02100
 #
 #		Difference in exact and empirical probabilities for each sum of two d6:
 #		(exact - simulated)
-#			sum = 2 :  -0.00222
-#			sum = 3 :   0.00256
-#			sum = 4 :  -0.00167
-#			sum = 5 :   0.00111
-#			sum = 6 :  -0.00111
-#			sum = 7 :  -0.02333
-#			sum = 8 :   0.00989
+#			sum = 2 :  -0.00522
+#			sum = 3 :   0.00156
+#			sum = 4 :  -0.01267
+#			sum = 5 :   0.00211
+#			sum = 6 :   0.01889
+#			sum = 7 :  -0.01433
+#			sum = 8 :   0.00689
 #			sum = 9 :  -0.00389
-#			sum = 10:   0.02333
-#			sum = 11:  -0.00444
-#			sum = 12:  -0.00022
+#			sum = 10:   0.00333
+#			sum = 11:  -0.00344
+#			sum = 12:   0.00678
 #
 #		Number of probabilities in spec:  0 of 11
 #		("within spec" means within three decimal places of each other)
 #
 #
-# $ python dice.py 1000000 -p
+# $ python dice.py 500000 -p
 #		Exact probabilities for each sum of two d6:
 #			sum = 2 :   0.02778
 #			... (shortened)
 #
 #		Simulation progress: 100.00%
 #		Empirical results for each sum of two d6:
-#			sum = 2 :   0.02800
+#			sum = 2 :   0.02755
 #			... (shortened)
 #
 #		Difference in exact and empirical probabilities for each sum of two d6:
 #		(exact - simulated)
-#			sum = 2 :  -0.00022
-#			sum = 3 :  -0.00044
-#			sum = 4 :   0.00003 ✓
-#			sum = 5 :   0.00008 ✓
-#			sum = 6 :  -0.00004 ✓
-#			sum = 7 :  -0.00004 ✓
-#			sum = 8 :  -0.00016
-#			sum = 9 :   0.00022
-#			sum = 10:   0.00012
-#			sum = 11:   0.00016
-#			sum = 12:   0.00029
+#			sum = 2 :   0.00023 ✓
+#			sum = 3 :  -0.00009 ✓
+#			sum = 4 :   0.00015 ✓
+#			sum = 5 :   0.00010 ✓
+#			sum = 6 :  -0.00040 ✓
+#			sum = 7 :   0.00013 ✓
+#			sum = 8 :   0.00004 ✓
+#			sum = 9 :  -0.00079 ✓
+#			sum = 10:   0.00002 ✓
+#			sum = 11:   0.00037 ✓
+#			sum = 12:   0.00024 ✓
 #
-#		Number of probabilities in spec:  4 of 11
+#		Number of probabilities in spec:  11 of 11
 #		("within spec" means within three decimal places of each other)
 #
 #
@@ -244,6 +246,12 @@ stdio.writeln('("within spec" means within three decimal places of each other)')
 # improvement to quickly make sure your code hasn't hung. I used it in Usage
 # Example #2, but you won't actually be able to see what it does without 
 # running it yourself.
+#
+# I also noticed that using the progress indicator may slow down simulation 
+# time significantly, as it has to redraw that line at ludicrous speeds.
+# However, with a fast enough device, the impact is likely minimal. My
+# experience is likely exaggerated, as I am doing my development in a Docker
+# container.
 # 
 # If you are curious about why I did it this way or how it works, let me know!
 # I'd be happy to share.
