@@ -30,6 +30,13 @@ if debug:
 else:
 	trials = int(sys.argv[1])
 
+# show progress
+try:
+	if sys.argv[2] == '-p':
+		showProgress = True
+except IndexError:
+	showProgress = False
+
 
 def bufferNumber(number:int, maxNumber, after=True):
 	"""
@@ -78,8 +85,17 @@ def simulate(trials:int):
 	counts = stdarray.create1D(12, 0)
 	frequencies = stdarray.create1D(12, 0.0)
 
+	if showProgress:
+		stdio.writeln()
+		sys.stdout.flush()
+
 	# run `trials` quantity trials and save sum in `sums[i]`
 	for i in range(trials):
+		# add a little progress bar
+		# booksite `stdio` does not support this functionality, so I had to implement it with `sys.stdout`
+		if showProgress:
+			progress = f"\rSimulation progress: {(100 * i) / trials:2.2f}%"
+			sys.stdout.write(progress)
 		sums[i] = oneTrial()
 	
 	# sort each sum into `counts` based on its value
@@ -189,11 +205,12 @@ stdio.writeln('("within spec" means within three decimal places of each other)')
 #		("within spec" means within three decimal places of each other)
 #
 #
-# $ python dice.py 500000
+# $ python dice.py 500000 -p
 #		Exact probabilities for each sum of two d6:
 #			sum = 2 :   0.02778
 #			... (shortened)
 #
+#		Simulation progress: 100.00%
 #		Empirical results for each sum of two d6:
 #			sum = 2 :   0.02755
 #			... (shortened)
@@ -214,5 +231,29 @@ stdio.writeln('("within spec" means within three decimal places of each other)')
 #
 #		Number of probabilities in spec:  11 of 11
 #		("within spec" means within three decimal places of each other)
+#
+#
+# -----------------------------------------------------------------------------
+# EXTRA NOTES
+# -----------------------------------------------------------------------------
+#
+# On lines 26-30, 80-82, and 88-90, I have code referencing a status or 
+# progress indicator. This is an optional thing that can be enabled by using
+# the `-p` option following the number of trials. I made this optional, as it
+# requires using a non-booksite module for output. 
+# 
+# It is a non-critical component of the code, but it is a nice quality of life
+# improvement to quickly make sure your code hasn't hung. I used it in Usage
+# Example #2, but you won't actually be able to see what it does without 
+# running it yourself.
+#
+# I also noticed that using the progress indicator may slow down simulation 
+# time significantly, as it has to redraw that line at ludicrous speeds.
+# However, with a fast enough device, the impact is likely minimal. My
+# experience is likely exaggerated, as I am doing my development in a Docker
+# container.
+# 
+# If you are curious about why I did it this way or how it works, let me know!
+# I'd be happy to share.
 #
 # =============================================================================
