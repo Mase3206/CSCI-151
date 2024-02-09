@@ -23,7 +23,7 @@ import stdio
 
 # set the number of trials
 # at least 500,000 trials are required for simulated probabilities to be within 
-# 3 decimal digits of exact probabilities
+# 3 decimal digits of exact probabilities; 1,000,000 gives greater chance
 debug = False
 if debug:
 	trials = 1000
