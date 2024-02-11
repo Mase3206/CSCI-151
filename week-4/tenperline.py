@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # =============================================================================
-# temperline.py
+# tenperline.py
 #
 # Nicely formats given numbers into columns of ten; for use with randomintseq.py
 #
@@ -80,7 +80,7 @@ while True:
 # EXAMPLE USAGE
 # -----------------------------------------------------------------------------
 #
-# $ python randomintseq.py 100 100 |python temperline.py
+# $ python randomintseq.py 100 100 |python tenperline.py
 #    48   69   63   63   52   68   99   47   27   89
 #    28    5   25   11   93   83   98   23   58   78
 #     4   84   16   52   82   64   21   56    2   13
@@ -92,7 +92,7 @@ while True:
 #    76    0   36    0   84   71   12   54    8   38
 #    28   98   23   66   17   17    5   12   94    0
 #
-# $ python randomintseq.py 100 10000 | python temperline.py
+# $ python randomintseq.py 100 10000 | python tenperline.py
 #  7332 7795 5171 3292 3782 1080 7477 2114 6693 2103
 #  6709 2103 6912 9167 9030 6015 4471 5572 4241 9950
 #  8674 9205 2418 2197 3386 8658 2041  200 5143  698
