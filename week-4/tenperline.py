@@ -14,38 +14,33 @@
 
 import stdio, stdarray, sys
 
-debug = False
+debugEnabled = False
 
+def debug(value:str, JSON=False):
+	try:
+		value = int(value)
+		isInt = True
+		isEOF = False
+	except ValueError:
+		isInt = False
 
-class DebugObj:
-	def __init__(self, value:str, JSON=False):
-		self.value = value
-		self.useJSON = JSON
-
-	def show(self):
-		try:
-			null = int(value)
-			isInt = True
-			isEOF = False
-		except ValueError:
-			isInt = False
-
-			if self.value.lower() == 'eof':
-				isEOF = True
-			else:
-				isEOF = False
-
-		if self.useJSON:
-			stdio.writeln( {
-				"value": self.value,
-				"isInt": isInt,
-				"isEOF": isEOF
-			} )
+		if value.lower() == 'eof':
+			isEOF = True
 		else:
-			stdio.writeln('Given value:', self.value)
-			stdio.writeln('Is integer:', isInt)
-			stdio.writeln('Is EOF:', isEOF)
-		stdio.writeln()
+			isEOF = False
+
+	if JSON:
+		stdio.writeln( {
+			"value": value,
+			"isInt": isInt,
+			"isEOF": isEOF
+		} )
+	else:
+		stdio.writef('Given value: %s\n', value)
+		stdio.writef('Is integer: %s\n', isInt)
+		stdio.writef('Is EOF: %s\n', isEOF)
+	
+	stdio.writeln()
 
 
 while True:
@@ -53,9 +48,8 @@ while True:
 
 	for i in range(0,10):
 		value = stdio.readLine()
-		if debug:
-			stdinDebug = DebugObj(value)
-			stdinDebug.show()
+		if debugEnabled:
+			debug(value, JSON=True)
 
 		try:
 			valueInt = int(value)
@@ -71,8 +65,6 @@ while True:
 		stdio.writef("%5d", numbers[i])
 
 	del numbers
-	if debug:
-		stdinDebug
 
 	stdio.writeln()
 
