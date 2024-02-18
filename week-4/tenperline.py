@@ -103,7 +103,7 @@ while True:
 #
 # 1. Upon reading EOF, the program exits.
 #
-# 2. The `DebugObj` class makes debugging with print statements much cleaner by
+# 2. The `debug` function makes debugging with print statements much cleaner by
 #    separating the tests into its own code block.
 #
 # =============================================================================
