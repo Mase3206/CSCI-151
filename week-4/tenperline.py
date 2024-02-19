@@ -12,7 +12,8 @@
 # Book Excercise 1.5.10
 # =============================================================================
 
-import stdio, stdarray, sys
+
+import stdio, stdarray
 
 debugEnabled = False
 
@@ -43,36 +44,33 @@ def debug(value:str, JSON=False):
 	stdio.writeln()
 
 
-while True:
+more = True
+while more == True:
 	numbers = stdarray.create1D(10)
 
 	for i in range(0,10):
-		value = stdio.readLine()
+		value = stdio.readString()
 		if debugEnabled:
 			debug(value, JSON=True)
 
-		try:
-			valueInt = int(value)
-			numbers[i] = valueInt
-
-		except ValueError:
-			if value.lower() == "eof":
-				sys.exit(0)
-			else:
-				raise
+		if stdio.isEmpty():
+			numbers[i] = int(value)
+			more = False
+			break
+		else:
+			numbers[i] = int(value)
 
 	for i in range(10):
 		stdio.writef("%5d", numbers[i])
 
-	del numbers
-
 	stdio.writeln()
+
 
 # =============================================================================
 # EXAMPLE USAGE
 # -----------------------------------------------------------------------------
 #
-# $ python randomintseq.py 100 100 |python tenperline.py
+# $ python randomintseq.py 100 100 | python tenperline.py
 #    48   69   63   63   52   68   99   47   27   89
 #    28    5   25   11   93   83   98   23   58   78
 #     4   84   16   52   82   64   21   56    2   13
@@ -101,9 +99,7 @@ while True:
 # EXTRA NOTES
 # -----------------------------------------------------------------------------
 #
-# 1. Upon reading EOF, the program exits.
-#
-# 2. The `debug` function makes debugging with print statements much cleaner by
+# 1. The `debug` function makes brute-force debugging much cleaner by
 #    separating the tests into its own code block.
 #
 # =============================================================================

@@ -12,7 +12,10 @@
 			"console": "integratedTerminal",
 			"justMyCode": true,
 			"args": [
-				"Step on no pets"
+				"<",
+				"/workspaces/CSCI-151/week-4/randomintseq.py",
+				"100",
+				"10"
 			]
 		}
 	]

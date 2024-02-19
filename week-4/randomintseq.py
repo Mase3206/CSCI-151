@@ -12,17 +12,20 @@
 # Book Excercise 1.5.10
 # =============================================================================
 
+
 import stdio, sys, random
 
-
+# get the parameters from command line
 count = int(sys.argv[1])
 maxRand = int(sys.argv[2]) - 1
 
-for i in range(count):
-	# time.sleep(1)
-	stdio.writeln(random.randint(0, maxRand))
 
-stdio.writeln("EOF")
+for i in range(count):
+	# storing then writing may address some edge cases where only one character
+	# out of the intended string is read
+	rand = str(random.randint(0, maxRand))
+	stdio.writeln(rand)
+
 
 # =============================================================================
 # EXAMPLE USAGE
@@ -39,7 +42,6 @@ stdio.writeln("EOF")
 #	84
 #	43
 #	56
-#	EOF
 #
 # $ python randomintseq.py 10 10000
 #	6396
@@ -52,7 +54,6 @@ stdio.writeln("EOF")
 #	6932
 #	7351
 #	8801
-#	EOF
 #
 #
 # -----------------------------------------------------------------------------
