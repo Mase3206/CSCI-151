@@ -51,6 +51,8 @@ numbers = stdarray.create1D(0, 0)
 while True:
 	try:
 		numbers += [stdio.readInt()]
+	# If there aren't any more numbers to read, stdio.readInt() will throw an
+	# EOFError. This handles that error and breaks the loop instead.
 	except EOFError:
 		break
 
