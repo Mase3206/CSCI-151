@@ -19,7 +19,6 @@ import sys
 
 import stdarray
 import stddraw
-import stdio
 
 
 class RangeError(ValueError):
