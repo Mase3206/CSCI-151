@@ -10,12 +10,10 @@
 			"request": "launch",
 			"program": "${file}",
 			"console": "integratedTerminal",
-			"justMyCode": true,
+			"justMyCode": false,
 			"args": [
-				"<",
-				"/workspaces/CSCI-151/week-4/randomintseq.py",
-				"100",
-				"10"
+				"16",
+				"1.0"
 			]
 		}
 	]
