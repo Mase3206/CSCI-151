@@ -13,7 +13,13 @@
 # =============================================================================
 
 
-import stdio, stdarray, stddraw, math, random, sys
+import math
+import random
+import sys
+
+import stdarray
+import stddraw
+import stdio
 
 
 class RangeError(ValueError):

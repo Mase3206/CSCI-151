@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-import circle, sys
+import sys
+
+import circle
 
 for i in range(20):
 	p = i / 20
