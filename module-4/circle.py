@@ -99,3 +99,16 @@ if __name__ == '__main__':
 	probability = float(sys.argv[2])
 
 	main(totalPoints, probability)
+
+
+# =============================================================================
+# EXAMPLE USAGE
+# -----------------------------------------------------------------------------
+# 
+# $ python circle.py 16 0.125
+#		<graphical output only>
+#
+# $ python circle.py 160 1.0
+#		<graphical output only>
+#
+# =============================================================================
