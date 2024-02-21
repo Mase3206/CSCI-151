@@ -16,8 +16,8 @@
 import stdio, sys, random
 
 # get the parameters from command line
-count = int(sys.argv[1])
-maxRand = int(sys.argv[2]) - 1
+count = int(sys.argv[2])
+maxRand = int(sys.argv[1]) - 1
 
 
 for i in range(count):
@@ -31,7 +31,7 @@ for i in range(count):
 # EXAMPLE USAGE
 # -----------------------------------------------------------------------------
 # 
-# $ python randomintseq.py 10 100
+# $ python randomintseq.py 100 10
 #	4
 #	88
 #	57
@@ -43,7 +43,7 @@ for i in range(count):
 #	43
 #	56
 #
-# $ python randomintseq.py 10 10000
+# $ python randomintseq.py 10000 10
 #	6396
 #	1688
 #	1671

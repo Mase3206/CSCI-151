@@ -46,7 +46,7 @@ def debug(value:str, JSON=False):
 
 more = True
 while more == True:
-	numbers = stdarray.create1D(10)
+	numbers = stdarray.create1D(0)
 
 	for i in range(0,10):
 		value = stdio.readString()
@@ -54,13 +54,13 @@ while more == True:
 			debug(value, JSON=True)
 
 		if stdio.isEmpty():
-			numbers[i] = int(value)
+			numbers += {int(value)}
 			more = False
 			break
 		else:
-			numbers[i] = int(value)
+			numbers += [int(value)]
 
-	for i in range(10):
+	for i in range(len(numbers)):
 		stdio.writef("%5d", numbers[i])
 
 	stdio.writeln()
@@ -82,17 +82,15 @@ while more == True:
 #    76    0   36    0   84   71   12   54    8   38
 #    28   98   23   66   17   17    5   12   94    0
 #
-# $ python randomintseq.py 100 10000 | python tenperline.py
-#  7332 7795 5171 3292 3782 1080 7477 2114 6693 2103
-#  6709 2103 6912 9167 9030 6015 4471 5572 4241 9950
-#  8674 9205 2418 2197 3386 8658 2041  200 5143  698
-#  7229 9064 2142 3439 3005 9746 3176 5375 4337 4346
-#  9249 5163 9912 6672 4234 7876 8093 4958 9476 3486
-#  4859 8517 7495 4892 9165  542 7644 8339 5396  254
-#  8164 8693 6252 6480 6722 2962 6214 2631 3837 3861
-#  1044 4493 3339 1995  105 5263 3577 5504 2027 7530
-#  4260 2290 3912 3468 7349 5834 6796 5091 8475 3039
-#  9011 2120  391 1174 8515  956 6869 1647 3752 2637
+# $ python randomintseq.py 100 74 | python tenperline.py
+#    55   30   13   97   95   15   85    4   35   94
+#     7   31   76   72   15   88   20    8   25   11
+#    93   98   54   83   12   55   50   69   21   63
+#    85   94   73   40   36   26   15    1   55   36
+#    17   24   82   51   57   30   62   31   85   46
+#    94   29   59   17   55   43   57   89    6   79
+#    48   72   60   88   16   77   88   91   74   39
+#    80   25   87   78
 #
 #
 # -----------------------------------------------------------------------------
