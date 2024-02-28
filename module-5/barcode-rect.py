@@ -205,6 +205,5 @@ def displayUBC(zipCode:str, frametime=2000):
 
 
 if __name__ == '__main__':
-	displayUBC('59401')
-	displayUBC('59401-3410')
-	displayUBC('98765')
+	import sys
+	displayUBC(sys.argv[1])
