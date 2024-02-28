@@ -153,7 +153,7 @@ def convert(code:str|list):
 		raise TypeError('Zip code must be str or list.')
 
 
-def displayUBC(zipCode:str, frametime=2000):
+def displayUBC(zipCode:str, frametime=float('inf')):
 	"""
 	drawUBC (USPS BarCode) takes a 5-digit or 5+4-digit Zip code and displays it using pygame via booksite `stddraw`
 
