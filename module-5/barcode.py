@@ -3,16 +3,19 @@
 # =============================================================================
 # barcocde.py
 #
-# makes USPS barcode from 5+4 zip code and checksum
+# Makes USPS barcode from 5+4 zip code and checksum.
 #
 # Noah S. Roberts
-# 02/23/2024
+# 02/24/2024
 # Assignment 8a
 # for Module 5
 # Book Excercise 2.1.34
 # =============================================================================
 
 import stdio, stddraw, stdarray
+
+
+barWidth = .5
 
 
 class LengthError(ValueError):
@@ -24,19 +27,20 @@ class FormatError(LengthError):
 
 def drawLine(height:int, xPos:int):
 	"""
-	drawLine draws a half- or full-height line at the given `x` position
+	drawLine draws a half- or full-height line at the given `x` position using pygame via booksite `stddraw`
 
 	Arguments
 	---------
-	* `height` : int, where 0 = half-height and 1 = full-height; this is the denonminator.
-	* `xPos` : float where line should be drawn
+		`height`: int, where 0 = half-height and 1 = full-height; this is the denonminator.
+		`xPos`: float where line should be drawn
 
 	Returns
 	-------
 	none
 	"""
+
 	if height == 0 or height == 1:
-		stddraw.line(xPos, 0, xPos, height + 1)
+		stddraw.filledRectangle(xPos, 0, barWidth, height + 1)
 		# stddraw.show(1)
 	else:
 		raise ValueError('Height must be binary 0 or 1.')
@@ -48,11 +52,11 @@ def calcDigit(digit:int):
 
 	Argument
 	--------
-	* `digit` : int
+		`digit`: int
 
 	Returns
 	-------
-	* str containing USPS line-code pseudo-binary (ex: '01001')
+		str containing USPS line-code pseudo-binary (ex: '01001')
 	"""
 	digits = {
 		1: '00011',
@@ -76,8 +80,8 @@ def drawDigit(uspsBinDigit:str, digitPos:int):
 
 	Argument
 	--------
-	* `uspsBinDigit` : str containing pseudo-binary USPS line-code digit (ex: '01001')
-	* `digitPos` : int of digit group position (must be divisible by 5)
+		`uspsBinDigit`: str containing pseudo-binary USPS line-code digit (ex: '01001')
+		`digitPos`: int of digit group position (must be divisible by 5)
 
 	Returns
 	-------
@@ -94,15 +98,19 @@ def convert(code:str|list):
 
 	Argument
 	--------
-	* `code` - type-specific options
-		* string-type Zip code in 5-digit format ('00000') or 5+4-digit format ('00000-0000')
-		* OR list-type Zip code with length 5 or 9
+		`code`: 
+			string-type: Zip code in 5-digit format ('00000') or 5+4-digit format ('00000-0000') 
+			OR list-type: Zip code with length 5 or 9
 
 	Returns
 	-------
-	* type-specific return
-		* string-type Zip code in 5-digit format ('00000') or 5+4-digit format ('00000-0000')
-		* OR list-type Zip code with length 5 or 9
+		string-type: Zip code in 5-digit format ('00000') or 5+4-digit format ('00000-0000')
+		OR list-type: Zip code with length 5 or 9
+
+	Examples
+	--------
+		5-digit: '19274' <-> [1, 9, 2, 7, 4]
+		5+4-digit: '19274-7635' <-> [1, 9, 2, 7, 4, 7, 6, 3, 5]
 	"""
 
 	if type(code) == str:
@@ -140,15 +148,22 @@ def convert(code:str|list):
 		
 		else:
 			raise LengthError('Code list must have length of 5 or 9')
+	
+	else:
+		raise TypeError('Zip code must be str or list.')
 
 
-def drawUBC(zipCode:str, frametime=2000):
+def displayUBC(zipCode:str, frametime=2000):
 	"""
-	drawUBC (USPS BarCode) takes a 5-digit or 5+4-digit Zip code and draws it using `stddraw`
+	drawUBC (USPS BarCode) takes a 5-digit or 5+4-digit Zip code and displays it using pygame via booksite `stddraw`
 
 	Argument
 	--------
-	* `zipCode` : str
+		`zipCode`: str
+
+	Output
+	------
+		pygame graphic
 	"""
 
 	# create a list of the zipCode digits as integers
@@ -160,20 +175,16 @@ def drawUBC(zipCode:str, frametime=2000):
 	# digit group width
 	dgw = 5
 
-	# startLine + digits + checksum + endLine
+	# startLine + (digits) + checksum + endLine
 	totalWidth = 1 + (dgw * len(zipList)) + dgw + 1
-	# zipWidth = dgw * len(zipCode)
 
 	# calculate checksum
 	checksum = sum(zipList) % 10
 
 	# adjust window and pen dimensions
-	stddraw.setXscale(-1, totalWidth)
-	stddraw.setYscale(0, 4)
-	if len(zipList) == 5:
-		stddraw.setPenRadius(0.1)
-	else:
-		stddraw.setPenRadius(0.2)
+	# the `-1 + barWidth` ensures the window gap at each end is similar
+	stddraw.setXscale(-1 + barWidth, totalWidth)
+	stddraw.setYscale(0, 5)
 
 
 	# draw start and end lines
@@ -194,6 +205,5 @@ def drawUBC(zipCode:str, frametime=2000):
 
 
 if __name__ == '__main__':
-	drawUBC('59401')
-	drawUBC('59401-3410')
-	drawUBC('98765')
+	import sys
+	displayUBC(sys.argv[1])
