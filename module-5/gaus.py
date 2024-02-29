@@ -13,15 +13,36 @@
 # =============================================================================
 
 
-import stdio, stddraw, stdarray, random, math, stdstats, sys
+# built-ins
+import math
+import random
+
+# booksite modules
+import stdarray
+import stddraw
+import stdio
+import stdstats
 
 
 def gaussian() -> float:
+	"""
+	Generate a random number following the Gaussian (normal, bell) distribution
+
+	Returns
+	-------
+		Gaussian random float
+	"""
+	
+	# initialize r
 	r = 0.0
+
+	# loop until r = (-∞,0)U(0,1)
 	while (r >= 1.0) or (r == 0.0):
 		x = random.uniform(-1.0, 1.0)
 		y = random.uniform(-1.0, 1.0)
 		r = x*x + y*y
+
+	# do some magic on r before returning it
 	return x * math.sqrt(-2.0 * math.log(r) / r)
 
 
@@ -47,7 +68,7 @@ def collectData(qty:int) -> list[float]:
 
 def trimData(data:list[float]) -> list:
 	"""
-	Trim the data to be between a defined minimum and maximum
+	Trim the data to be between a pre-defined minimum and maximum
 
 	Parameter
 	---------
@@ -66,6 +87,7 @@ def trimData(data:list[float]) -> list:
 		high = (i + 1) * 0.05
 
 		for j in range(len(data)):
+			# if data[i] is between the low and high values, increment count[i]
 			if low <= data[j] <= high:
 				counts[i] += 1
 
@@ -73,19 +95,32 @@ def trimData(data:list[float]) -> list:
 
 
 def printStats(data:list[float]) -> None:
-	stdio.writeln()  # put a space after the pygame welcome
-	stdio.writef('µ    = %7.4f\n', stdstats.mean(data))
+	"""
+	Prints some basic statistics
+
+	Parameter
+	---------
+		`data`: list of floats to do statistics on
+	"""
+	stdio.writef('\nµ    = %7.4f\n', stdstats.mean(data))
 	stdio.writef('med  = %7.4f\n', stdstats.median(data))
 	stdio.writef('%s    = %7.4f\n', chr(0x03c3), stdstats.stddev(data))
-	stdio.writef('%s%s   = %7.4f\n', chr(0x03c3), chr(0x00B2), stdstats.var(data))
+	stdio.writef('%s%s   = %7.4f\n\n', chr(0x03c3), chr(0x00B2), stdstats.var(data))
 	# 0x03c3 is lowercase sigma, 0x00B2 is superscript 2
-
-	return
 
 
 def plotData(data:list[float]) -> None:
+	"""
+	Plot filled rectangles using pygame-based booksite `stddraw`
+
+	Parameter
+	---------
+		`data`: list of floats to plot on a histogram-style graph
+	"""
+	stdio.writeln('Plotting data...')
+
 	# set x scale to just above and below range
-	stddraw.setXscale(-1, 20)
+	stddraw.setXscale(-0.6, 19.5)
 
 	# set y scale max to just above most frequent point
 	stddraw.setYscale(0, max(data) * 1.05)
@@ -94,6 +129,7 @@ def plotData(data:list[float]) -> None:
 	stddraw.setPenRadius(0.01)
 	stddraw.setPenColor(stddraw.BLACK)
 
+	# draw dem rectangles
 	for i in range(20):
 		stddraw.filledRectangle(i - 0.5, 0, 0.9, data[i])
 
@@ -101,13 +137,24 @@ def plotData(data:list[float]) -> None:
 
 
 def main(nPoints:int):
+	# get the points
 	data = collectData(nPoints)
+
+	# only include a specific range of points 
 	dataInRange = trimData(data)
+
+	# print some basic stats
 	printStats(data)
+
+	# show the data in a pretty graphic!
 	plotData(dataInRange)
 
 
 if __name__ == '__main__':
+	# sys is only needed in the test client, so only import it here
+	import sys
+
+	# take the command line argument here to allow for portability
 	main(int(sys.argv[1]))
 
 
@@ -115,18 +162,28 @@ if __name__ == '__main__':
 # EXAMPLE USAGE
 # -----------------------------------------------------------------------------
 #
-# $ python gaus.py urmom
-#	ha lol
+# $ python gaus.py 1000000
+# 	(pygame hello)
+# 
+# 	µ    = -0.0006
+# 	med  = -0.0013
+# 	σ    =  1.0008
+# 	σ²   =  1.0017
+# 
+# 	Plotting data...
+#	(display graphic)
 #
-# $ python gaus.py urmom2
-#	ha lol 2
+# 
+# $ python gaus.py 1000
+# 	(pygame hello)
+# 
+# 	µ    = -0.0169
+# 	med  = -0.0385
+# 	σ    =  1.0194
+# 	σ²   =  1.0391
+# 
+# 	Plotting data...
+# 	(display graphic)
 #
-#
-# -----------------------------------------------------------------------------
-# EXTRA NOTES
-# -----------------------------------------------------------------------------
-#
-# 1. urmom3
 #
 # =============================================================================
-
