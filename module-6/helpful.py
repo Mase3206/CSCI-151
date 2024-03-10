@@ -92,7 +92,27 @@ def median(numbers: list[int|float]) -> int|float:
 	else:
 		# if odd
 		return numbers[int(len(numbers) / 2 - 0.5)]
-	
+
+
+def stdinList(a: str) -> list:
+	"""
+	Converts a string-enclosed list (default format for stdin or sys.argv inputs) to a proper list
+
+	Argument
+	--------
+		a: str-enclosed list; i.e. `"[1, 3.2, [4, 5], 'a', {'b': 4}, True, (7, 'v')]"`
+
+	Returns
+	-------
+		true Python list object; i.e. `[1, 3.2, [4, 5], 'a', {'b': 4}, True, (7, 'v')]`
+	"""
+
+	import re
+
+	b = re.findall(r'"\s*([^"]*?)\s*"', a)
+
+	return b
+
 
 def _testClient():
 	"""

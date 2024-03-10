@@ -13,6 +13,17 @@
 # =============================================================================
 
 
-import helpful
+import helpful, stdio, stdarray
 
 
+def help():
+	return
+
+
+def main():
+	return
+
+
+if __name__ == '__main__':
+	import sys
+	given = sys.argv[1]
