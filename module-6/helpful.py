@@ -1,5 +1,42 @@
 #!/usr/bin/env python3
 
+"""
+Helpful functions that really should be built-in.
+
+Functions
+---------
+* `avg(numbers: list[int|float]) -> float`
+* `median(numbers: list[int|float]) -> int|float`
+
+---
+
+Average
+=======
+Returns the average of the given list
+
+Argument
+--------
+	numbers: list of floats or ints
+
+Returns
+-------
+	float
+
+---
+
+Median
+======
+Returns the median of the given list
+
+Argument
+--------
+	numbers: list of floats or ints
+
+Returns
+-------
+	int or float
+"""
+
 # =============================================================================
 # helpful.py
 #
