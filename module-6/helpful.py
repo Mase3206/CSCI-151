@@ -102,7 +102,8 @@ def _testClient():
 	Simple test client. 
 	"""
 
-	import stdio, stdarray
+	import stdarray
+	import stdio
 
 
 	odd = stdarray.create1D(5, 0)
