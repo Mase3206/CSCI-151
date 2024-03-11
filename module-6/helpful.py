@@ -100,16 +100,32 @@ def stdinList(a: str) -> list:
 
 	Argument
 	--------
-		a: str-enclosed list; i.e. `"[1, 3.2, [4, 5], 'a', {'b': 4}, True, (7, 'v')]"`
+		a: str-enclosed list; i.e. `"[1, 3.2, [4, 5], 'a', {'b': 4}, "true", (7, 'v')]"`
 
 	Returns
 	-------
 		true Python list object; i.e. `[1, 3.2, [4, 5], 'a', {'b': 4}, True, (7, 'v')]`
 	"""
 
-	import re
+	import json, stdarray
 
-	b = re.findall(r'"\s*([^"]*?)\s*"', a)
+	a_list = stdarray.create1D(len(a), 0)
+	a_list = list(a)
+
+
+	for i in range(len(a_list)):
+		# convert all quotes to escaped double-quotes
+		if a_list[i] == '\'':
+			a_list[i] = '\\"'
+		elif a_list[i] == "\\'":
+			a_list[i] = '\\"'
+
+		if a_list[i:i+4] == 'True':
+			a_list[i:i+4] = []
+
+
+	b = json.loads(a)
+
 
 	return b
 
@@ -139,13 +155,17 @@ def _testClient():
 	stdio.writef('odd:\n\torig = %s\n\tsorted = %s\n', str(odd), str(list(sorted(odd))))
 	stdio.writef('even:\n\torig = %s\n\tsorted = %s\n', str(even), str(list(sorted(even))))
 
-	stdio.writeln('\nAll values printed first as an integer and later as a float fix 4.')
+	stdio.writeln('\nAll values printed first as an integer and later as a float fix 4 (where applicable).')
 
 	stdio.writef('avg(odd):\n\tint: %d\n\tfloat: %.4f\n', avg(odd), avg(odd))
 	stdio.writef('avg(even):\n\tint: %d\n\tfloat: %.4f\n', avg(even), avg(even))
 
 	stdio.writef('median(odd):\n\tint: %d\n\tfloat: %.4f\n', median(odd), median(odd))
 	stdio.writef('median(even):\n\tint: %d\n\tfloat: %.4f\n', median(even), median(even))
+
+	stdio.writef('\nstdinList(odd):\n\t%s\n', stdinList(f'{odd}'))
+	torture = "[1, 3.2, [4, 5], \"a\", {\"b\": 4}, \"true\", (7, \"v\")]"
+	stdio.writef('stdioList(%s): torture test\n\t%s\n', torture,  stdinList(torture))
 
 	stdio.writeln('\n--- End Test Client ---\n')
 

@@ -20,10 +20,26 @@ def help():
 	return
 
 
-def main():
-	return
+def main(arg: list[int|float]):
+	"""
+	Uses `helpful` to calculate and write the average and median values of the given list to stdout using booksite `stdio`.
+
+	Argument
+	--------
+		arg: list of ints or float
+
+	Returns
+	-------
+		None
+	"""
+
+	
 
 
 if __name__ == '__main__':
 	import sys
-	given = sys.argv[1]
+	if (given := sys.argv[1]) == '-h':
+		help()
+	else:
+		main(helpful.stdinList(given))
+
