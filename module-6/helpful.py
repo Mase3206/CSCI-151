@@ -35,6 +35,24 @@ Argument
 Returns
 -------
 	int or float
+
+---
+
+StdIn List Converter
+====================
+Converts a string-enclosed list (default format for stdin or sys.argv inputs) to a proper list.
+
+Argument
+--------
+	a: str-enclosed list; i.e. `"[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18.0}, True, (7, 'v')]"`
+
+Returns
+-------
+	true Python list object; i.e. `[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18}, True, (7, 'v')]`
+
+Requires
+--------
+	* sic
 """
 
 # =============================================================================
@@ -100,34 +118,17 @@ def stdinList(a: str) -> list:
 
 	Argument
 	--------
-		a: str-enclosed list; i.e. `"[1, 3.2, [4, 5], 'a', {'b': 4}, "true", (7, 'v')]"`
+		a: str-enclosed list; i.e. `"[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18.0}, True, (7, 'v')]"`
 
 	Returns
 	-------
-		true Python list object; i.e. `[1, 3.2, [4, 5], 'a', {'b': 4}, True, (7, 'v')]`
+		true Python list object; i.e. `[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18}, True, (7, 'v')]`
 	"""
 
-	import json, stdarray
+	import sic
 
-	a_list = stdarray.create1D(len(a), 0)
-	a_list = list(a)
-
-
-	for i in range(len(a_list)):
-		# convert all quotes to escaped double-quotes
-		if a_list[i] == '\'':
-			a_list[i] = '\\"'
-		elif a_list[i] == "\\'":
-			a_list[i] = '\\"'
-
-		if a_list[i:i+4] == 'True':
-			a_list[i:i+4] = []
-
-
-	b = json.loads(a)
-
-
-	return b
+	b = sic.List(a)
+	return b.parsed
 
 
 def _testClient():
@@ -164,8 +165,8 @@ def _testClient():
 	stdio.writef('median(even):\n\tint: %d\n\tfloat: %.4f\n', median(even), median(even))
 
 	stdio.writef('\nstdinList(odd):\n\t%s\n', stdinList(f'{odd}'))
-	torture = "[1, 3.2, [4, 5], \"a\", {\"b\": 4}, \"true\", (7, \"v\")]"
-	stdio.writef('stdioList(%s): torture test\n\t%s\n', torture,  stdinList(torture))
+	torture = "[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18.0}, True, (7, 'v')]"
+	stdio.writef('stdioList(torture): torture test\n\t%s, %s\n',  stdinList(torture), str(type(stdinList(torture))))
 
 	stdio.writeln('\n--- End Test Client ---\n')
 

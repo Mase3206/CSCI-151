@@ -17,7 +17,7 @@ import helpful, stdio, stdarray
 
 
 def help():
-	return
+	stdio.writeln('Simple client program to interface with my wacky module\n\nARGUMENT:\n\tlist: string-enclosed list object containing ints and/or floats')
 
 
 def main(arg: list[int|float]):
@@ -33,13 +33,22 @@ def main(arg: list[int|float]):
 		None
 	"""
 
-	
+	average = helpful.avg(arg)
+	median = helpful.median(arg)
+
+	stdio.writef('Avg: %.5f\n', average)
+	stdio.writef('Med: %.5f\n', median)
+
 
 
 if __name__ == '__main__':
 	import sys
+	if len(sys.argv) == 1:
+		stdio.writeln('Missing required argument: list')
+		exit(1)
 	if (given := sys.argv[1]) == '-h':
 		help()
 	else:
-		main(helpful.stdinList(given))
+		given_list = helpful.stdinList(given)
+		main(given_list)
 

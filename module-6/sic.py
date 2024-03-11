@@ -1,10 +1,26 @@
 #!/usr/bin/env python3
 
+# =============================================================================
+# sic.py
+#
+# Code used by helpful.py to do the actual string-enclosed list conversion/parsing
+#
+# Noah S. Roberts
+# 03.10.2024
+# Assignment 9
+# for Module 6
+# Book Excercise ???
+# =============================================================================
+
+
 import stdarray
 
 
 
 class Dict():
+	"""
+	Parses a string-enclosed dictionary into a proper dictionary. Not intended to be initialized directly and may not work correctly if doing so.
+	"""
 	def __init__(self, a: list):
 		self.a = a
 		self.d = {}
@@ -37,19 +53,18 @@ class Dict():
 
 
 
-
-
 class List():
 	"""
-	Converts a string-enclosed list (default format for stdin or sys.argv inputs) to a proper list
+	Object that parses a string-enclosed list (default format for stdin or sys.argv inputs) to a proper list. It also stores the type of each of the main list's elements.
 
 	Argument
 	--------
-		a: str-enclosed list; i.e. `"[1, 3.2, [4, 5], 'a', {'b': 4}, "true", (7, 'v')]"`
+		a: str-enclosed list; i.e. `"[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18.0}, True, (7, 'v')]"`
 
 	Returns
 	-------
-		true Python list object; i.e. `[1, 3.2, [4, 5], 'a', {'b': 4}, True, (7, 'v')]`
+		List.parsed: true Python list object; i.e. `[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18}, True, (7, 'v')]`
+		List.objTypes: type of each of the main list's elements
 	"""
 	
 	def __init__(self, a: str):
@@ -97,22 +112,28 @@ class List():
 					self.contentTypes[i] = 'tuple_end'
 					self.a[i] = self.a[i][:-1]
 				
-				# everything else can just be marked as "content"
-				# grab the content's type here too; fewer lines of code
+				# everything else can just be marked as "content" as a catch-all
 				else:
 					self.contentTypes[i] = 'content'
 			else:
 				self.contentTypes[i] = 'content'
 		
 
+		# self.objTypes index
 		typeCounter = 0
+
+		# loop index; may increment by more than 1 per loop
 		i = 0
 		while i < self.length:
 			j = 0
 
 			if self.contentTypes[i] == 'content':
+				# if not a list, dict, or tuple, find what type it can be (int, float, bool, or str)
 				self.objTypes[typeCounter] = canObjType(self.a[i])
 
+				# this dense block of code stores the value in it's optimal type
+				# i.e. 'True' could be int(1), but it should be bool(True)
+				# i.e.  94.0 could be type(float), but it should be type(int)
 				if self.objTypes[typeCounter] == int:
 					self.parsed[typeCounter] = int(float(self.a[i]))
 				elif self.objTypes[typeCounter] == float:
@@ -127,6 +148,7 @@ class List():
 				i += 1
 
 			elif self.contentTypes[i] == 'list_start':
+				# find the start and end point of the sublist and initialize another List object with that range
 				j += 1
 				while True:
 					if self.contentTypes[i + j] == 'list_end':
@@ -137,9 +159,11 @@ class List():
 				self.parsed[typeCounter] = List(self.a[i:i+j+1]).parsed
 
 				typeCounter += 1
+				# don't iterate over the elements within the sublist
 				i += j + 1
 
 			elif self.contentTypes[i] == 'dict_start':
+				# find the start and end point of the dict and initialize a Dict object with that range
 				j += 1
 				while True:
 					if self.contentTypes[i + j] == 'dict_end':
@@ -150,9 +174,11 @@ class List():
 				self.parsed[typeCounter] = Dict(self.a[i:i+j+1]).parsed
 
 				typeCounter += 1
+				# don't iterate over the elements within the dict
 				i += j + 1
 
 			elif self.contentTypes[i] == 'tuple_start':
+				# find the start and end point of the tuple and initialize a Tuple object with that range
 				j += 1
 				while True:
 					if self.contentTypes[i + j] == 'tuple_end':
@@ -163,6 +189,7 @@ class List():
 				self.parsed[typeCounter] = Tuple(self.a[i:i+j+1]).parsed
 
 				typeCounter += 1
+				# don't iterate over the elements within the tuple
 				i += j + 1
 			
 			else:
@@ -172,6 +199,7 @@ class List():
 		
 	
 	def cleanup(self):
+		# remove unused None fillers at the end of the arrays and overwrite them
 		temp_parsed = stdarray.create1D(0)
 		for v in self.parsed:
 			if v != None:
@@ -186,9 +214,10 @@ class List():
 
 
 
-
-
 class Tuple():
+	"""
+	Parses a string-enclosed tuple into a proper tuple. Not intended to be initialized directly and may not work correctly if doing so.
+	"""
 	def __init__(self, a: str):
 		self.parsed = tuple(List(a).parsed)
 
@@ -267,8 +296,42 @@ def string(val: str) -> str:
 
 
 
-if __name__ == '__main__':
+def _testClient():
 	a = List("[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18.0}, True, (7, 'v')]")
 	print(a.parsed)
 	print(a.objTypes)
 	print(a.contentTypes)
+
+
+if __name__ == '__main__':
+	_testClient()
+
+
+
+# =============================================================================
+# EXAMPLE USAGE
+# -----------------------------------------------------------------------------
+# 
+# $ python sic.py 
+# 	[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18}, True, (7, 'v')]
+# 	[<class 'int'>, <class 'float'>, <class 'list'>, <class 'str'>, <class 'dict'>, <class 'bool'>, <class 'tuple'>]
+# 	['content', 'content', 'list_start', 'list_end', 'content', 'dict_start', 'content', 'dict_end', 'content', 'tuple_start', 'tuple_end']
+#
+#
+# -----------------------------------------------------------------------------
+# THAT'S COOL... BUT WHY??
+# -----------------------------------------------------------------------------
+#
+# Every once in a while, I end up needing to read a valid Python object from
+# standard input or from a text file. However, there aren't any quick, easy,
+# and *secure* methods to parse the raw input (often a string object) into a 
+# valid Python object. The methods that do exist are either (1) verifiably
+# insecure and can be exploited, (2) finicky, requiring a very specific set of
+# conditions to work, or (3) don't work or are very limited.
+#
+# So I said, "screw it, I'm a programmer, why don't I program this?"
+# 	
+# So I programmed it. It may not be the prettiest, most fully featured, or
+# efficient, but by golly it's mine.
+#
+# =============================================================================
