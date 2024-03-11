@@ -10,63 +10,94 @@ class stdinDict():
 		self.d = {}
 		self.keys = stdarray.create1D(len(self.a))
 		self.values = stdarray.create1D(len(self.a))
+		self.convert()
+		self.parsed = self.d
 
 	def convert(self):
-		self.a[0] = self.a[0][1:]
-		self.a[-1] = self.a[0][:-1]
+		# self.a[0] = self.a[0][1:]
+		# self.a[-1] = self.a[0][:-1]
+			
+		pair = stdarray.create1D(2)
 
 		for i in range(len(self.a)):
 			pair = stdarray.create1D(2)
-			# [self.keys[i], self.values[i]] = self.a[i].split(': ')
 			pair = self.a[i].split(': ')
-			self.d += {pair[0]: pair[1]}
+			
+			pair[0] = string(pair[0])
+			if (objType := canObjType(pair[1])) == int:
+				pair[1] = int(float(pair[1]))
+			elif objType == float:
+				pair[1] = float(pair[1])
+			elif objType == bool:
+				pair[1] = boolean(pair[1])
+			elif objType == str:
+				pair[1] = string(pair[1])
+
+			self.d[pair[0]] = pair[1]
 		
-		print(self.d)
+		# return self.d
 
 
-
-
-
-class stdinTuple():
-	def __init__(self, a: list):
-		self.a = a
 
 
 
 class stdinList():
+	"""
+	Converts a string-enclosed list (default format for stdin or sys.argv inputs) to a proper list
+
+	Argument
+	--------
+		a: str-enclosed list; i.e. `"[1, 3.2, [4, 5], 'a', {'b': 4}, "true", (7, 'v')]"`
+
+	Returns
+	-------
+		true Python list object; i.e. `[1, 3.2, [4, 5], 'a', {'b': 4}, True, (7, 'v')]`
+	"""
+	
 	def __init__(self, a: str):
 		temp = stdarray.create1D(0, 0)		# []
 		temp = a[1:-1]						# "1, 3.2, [4, 5], 'a', {'b': 4, 'c': 18.0}, True, (7, 'v')"
-		temp = temp.split(', ')				# ['1', '3.2', '[4', '5]', "'a'", "{'b': 4", "'c': 18.0}", 'True', '(7', "'v')"]
+		try:
+			temp = temp.split(', ')				# ['1', '3.2', '[4', '5]', "'a'", "{'b': 4", "'c': 18.0}", 'True', '(7', "'v')"]
+		except AttributeError:
+			temp = a
 		self.length = len(temp)
 		self.a = temp
 		self.contentTypes = stdarray.create1D(self.length, None)
 		self.objTypes = stdarray.create1D(self.length, None)
 
-		self.prep()
+		self.parsed = stdarray.create1D(self.length, None)
+
+		self.convert()
 
 
 
-	def prep(self):
+	def convert(self):
 		for i in range(self.length):
 			if len(self.a[i]) > 1:
 				# find lists
 				if self.a[i][0] == '[':
 					self.contentTypes[i] = 'list_start'
+					self.a[i] = self.a[i][1:]
 				elif self.a[i][-1] == ']':
 					self.contentTypes[i] = 'list_end'
+					self.a[i] = self.a[i][:-1]
 
 				# find dictionaries
 				elif self.a[i][0] == '{':
 					self.contentTypes[i] = 'dict_start'
+					self.a[i] = self.a[i][1:]
 				elif self.a[i][-1] == '}':
 					self.contentTypes[i] = 'dict_end'
+					self.a[i] = self.a[i][:-1]
 
 				# find tuples
 				elif self.a[i][0] == '(':
 					self.contentTypes[i] = 'tuple_start'
+					self.a[i] = self.a[i][1:]
 				elif self.a[i][-1] == ')':
 					self.contentTypes[i] = 'tuple_end'
+					self.a[i] = self.a[i][:-1]
 				
 				# everything else can just be marked as "content"
 				# grab the content's type here too; fewer lines of code
@@ -85,6 +116,17 @@ class stdinList():
 
 			if self.contentTypes[i] == 'content':
 				self.objTypes[typeCounter] = canObjType(self.a[i])
+
+				if self.objTypes[typeCounter] == int:
+					self.parsed[typeCounter] = int(float(self.a[i]))
+				elif self.objTypes[typeCounter] == float:
+					self.parsed[typeCounter] = float(self.a[i])
+				elif self.objTypes[typeCounter] == bool:
+					self.parsed[typeCounter] = boolean(self.a[i])
+				elif self.objTypes[typeCounter] == str:
+					self.parsed[typeCounter] = string(self.a[i])
+
+
 				typeCounter += 1
 				i += 1
 
@@ -95,6 +137,9 @@ class stdinList():
 						break
 					j += 1
 				self.objTypes[typeCounter] = list
+
+				self.parsed[typeCounter] = stdinList(self.a[i:i+j+1]).parsed
+
 				typeCounter += 1
 				i += j + 1
 
@@ -105,8 +150,11 @@ class stdinList():
 						break
 					j += 1
 				self.objTypes[typeCounter] = dict
+
+				self.parsed[typeCounter] = stdinDict(self.a[i:i+j+1]).parsed
+
 				typeCounter += 1
-				i += j 
+				i += j + 1
 
 			elif self.contentTypes[i] == 'tuple_start':
 				j += 1
@@ -115,33 +163,43 @@ class stdinList():
 						break
 					j += 1
 				self.objTypes[typeCounter] = tuple
+
+				# self.parsed[typeCounter] = tuple(stdinList(self.a[i:i+j+1]).parsed)
+				self.parsed[typeCounter] = stdinTuple(self.a[i:i+j+1]).parsed
+
 				typeCounter += 1
-				i += j
+				i += j + 1
 			
 			else:
 				# self.objTypes[typeCounter] = 'what'
 				# typeCounter += 1
 				i += 1
 		
-		# print(self.a)
-
-
-
-	def recurse(self):
-		raise NotImplementedError()
-
-
-	def convert(self) -> list:
-
-		# Try converting to a number first
-		for i in range(self.length):
-			self.a[i] = number(self.a[i])
-
-		# Find lists and record their indeces
+		self.cleanup()
 		
-		return
-		
+	
+	def cleanup(self):
+		temp_parsed = stdarray.create1D(0)
+		for v in self.parsed:
+			if v != None:
+				temp_parsed.append(v)
+		self.parsed = temp_parsed
 
+		temp_objTypes = stdarray.create1D(0)
+		for t in self.objTypes:
+			if t != None:
+				temp_objTypes.append(t)
+		self.objTypes = temp_objTypes
+
+
+
+
+
+class stdinTuple():
+	# def __init__(self, a: list):
+	# 	self.a = a 
+	def __init__(self, a: str):
+		self.parsed = tuple(stdinList(a).parsed)
 
 
 
@@ -190,8 +248,6 @@ def canObjType(val: str) -> type:
 			return str
 		
 
-	
-
 
 def number(val: str) -> float|int:
 	if canFloat(val):
@@ -204,6 +260,24 @@ def number(val: str) -> float|int:
 
 
 
+def boolean(val: str) -> bool:
+	if val == 'True':
+		return True
+	elif val == 'False':
+		return False
+	elif val == None:
+		return None
+	else:
+		raise TypeError(f'Given val {val} is not a boolean')
+	
+
+def string(val: str) -> str:
+	return val[1:-1]
+
+
+
 if __name__ == '__main__':
 	a = stdinList("[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18.0}, True, (7, 'v')]")
-	# a.convert()
+	print(a.parsed)
+	print(a.objTypes)
+	print(a.contentTypes)
