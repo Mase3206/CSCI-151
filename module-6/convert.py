@@ -7,6 +7,23 @@ import stdarray
 class stdinDict():
 	def __init__(self, a: list):
 		self.a = a
+		self.d = {}
+		self.keys = stdarray.create1D(len(self.a))
+		self.values = stdarray.create1D(len(self.a))
+
+	def convert(self):
+		self.a[0] = self.a[0][1:]
+		self.a[-1] = self.a[0][:-1]
+
+		for i in range(len(self.a)):
+			pair = stdarray.create1D(2)
+			# [self.keys[i], self.values[i]] = self.a[i].split(': ')
+			pair = self.a[i].split(': ')
+			self.d += {pair[0]: pair[1]}
+		
+		print(self.d)
+
+
 
 
 
@@ -105,7 +122,8 @@ class stdinList():
 				# self.objTypes[typeCounter] = 'what'
 				# typeCounter += 1
 				i += 1
-		return
+		
+		# print(self.a)
 
 
 
@@ -117,7 +135,7 @@ class stdinList():
 
 		# Try converting to a number first
 		for i in range(self.length):
-			self.a[i] = self.number(self.a[i])
+			self.a[i] = number(self.a[i])
 
 		# Find lists and record their indeces
 		
@@ -187,5 +205,5 @@ def number(val: str) -> float|int:
 
 
 if __name__ == '__main__':
-	a = stdinList("[1, 3.2, [4, 5], 'a', {'b': 4, 'c': 18.0}, True, (7, 'v')]")
-	a.convert()
+	a = stdinList("[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18.0}, True, (7, 'v')]")
+	# a.convert()
