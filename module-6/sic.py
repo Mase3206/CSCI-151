@@ -3,7 +3,8 @@
 # =============================================================================
 # sic.py
 #
-# Code used by helpful.py to do the actual string-enclosed list conversion/parsing
+# Code used by helpful.py to do the actual string-enclosed list conversion/
+# parsing. SIC = Standard Input Conversion
 #
 # Noah S. Roberts
 # 03.10.2024
