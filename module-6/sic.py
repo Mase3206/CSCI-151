@@ -76,6 +76,7 @@ class List():
 			temp = a
 		self.length = len(temp)
 		self.a = temp
+
 		self.contentTypes = stdarray.create1D(self.length, None)
 		self.objTypes = stdarray.create1D(self.length, None)
 
@@ -196,6 +197,7 @@ class List():
 				i += 1
 		
 		self.cleanup()
+		return self.parsed
 		
 	
 	def cleanup(self):
@@ -214,12 +216,15 @@ class List():
 
 
 
-class Tuple():
+class Tuple(List):
 	"""
 	Parses a string-enclosed tuple into a proper tuple. Not intended to be initialized directly and may not work correctly if doing so.
 	"""
-	def __init__(self, a: str):
-		self.parsed = tuple(List(a).parsed)
+	
+	def convert(self):
+		parsed_list = super().convert()
+		self.parsed = tuple(parsed_list)
+	
 
 
 
@@ -290,6 +295,7 @@ def boolean(val: str) -> bool:
 	else:
 		raise TypeError(f'Given val {val} is not a boolean')
 	
+
 
 def string(val: str) -> str:
 	return val[1:-1]
