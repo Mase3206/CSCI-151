@@ -4,7 +4,7 @@ import stdarray
 
 
 
-class stdinDict():
+class Dict():
 	def __init__(self, a: list):
 		self.a = a
 		self.d = {}
@@ -34,14 +34,12 @@ class stdinDict():
 				pair[1] = string(pair[1])
 
 			self.d[pair[0]] = pair[1]
-		
-		# return self.d
 
 
 
 
 
-class stdinList():
+class List():
 	"""
 	Converts a string-enclosed list (default format for stdin or sys.argv inputs) to a proper list
 
@@ -58,7 +56,7 @@ class stdinList():
 		temp = stdarray.create1D(0, 0)		# []
 		temp = a[1:-1]						# "1, 3.2, [4, 5], 'a', {'b': 4, 'c': 18.0}, True, (7, 'v')"
 		try:
-			temp = temp.split(', ')				# ['1', '3.2', '[4', '5]', "'a'", "{'b': 4", "'c': 18.0}", 'True', '(7', "'v')"]
+			temp = temp.split(', ')			# ['1', '3.2', '[4', '5]', "'a'", "{'b': 4", "'c': 18.0}", 'True', '(7', "'v')"]
 		except AttributeError:
 			temp = a
 		self.length = len(temp)
@@ -103,10 +101,8 @@ class stdinList():
 				# grab the content's type here too; fewer lines of code
 				else:
 					self.contentTypes[i] = 'content'
-					# self.objTypes = canObjType(self.a[i])
 			else:
 				self.contentTypes[i] = 'content'
-				# self.objTypes[i] = canObjType(self.a[i])
 		
 
 		typeCounter = 0
@@ -138,7 +134,7 @@ class stdinList():
 					j += 1
 				self.objTypes[typeCounter] = list
 
-				self.parsed[typeCounter] = stdinList(self.a[i:i+j+1]).parsed
+				self.parsed[typeCounter] = List(self.a[i:i+j+1]).parsed
 
 				typeCounter += 1
 				i += j + 1
@@ -151,7 +147,7 @@ class stdinList():
 					j += 1
 				self.objTypes[typeCounter] = dict
 
-				self.parsed[typeCounter] = stdinDict(self.a[i:i+j+1]).parsed
+				self.parsed[typeCounter] = Dict(self.a[i:i+j+1]).parsed
 
 				typeCounter += 1
 				i += j + 1
@@ -164,15 +160,12 @@ class stdinList():
 					j += 1
 				self.objTypes[typeCounter] = tuple
 
-				# self.parsed[typeCounter] = tuple(stdinList(self.a[i:i+j+1]).parsed)
-				self.parsed[typeCounter] = stdinTuple(self.a[i:i+j+1]).parsed
+				self.parsed[typeCounter] = Tuple(self.a[i:i+j+1]).parsed
 
 				typeCounter += 1
 				i += j + 1
 			
 			else:
-				# self.objTypes[typeCounter] = 'what'
-				# typeCounter += 1
 				i += 1
 		
 		self.cleanup()
@@ -195,11 +188,9 @@ class stdinList():
 
 
 
-class stdinTuple():
-	# def __init__(self, a: list):
-	# 	self.a = a 
+class Tuple():
 	def __init__(self, a: str):
-		self.parsed = tuple(stdinList(a).parsed)
+		self.parsed = tuple(List(a).parsed)
 
 
 
@@ -277,7 +268,7 @@ def string(val: str) -> str:
 
 
 if __name__ == '__main__':
-	a = stdinList("[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18.0}, True, (7, 'v')]")
+	a = List("[1, 3.2, [4, 5], 'a', {'b': 4, 'g': 4, 'c': 18.0}, True, (7, 'v')]")
 	print(a.parsed)
 	print(a.objTypes)
 	print(a.contentTypes)
