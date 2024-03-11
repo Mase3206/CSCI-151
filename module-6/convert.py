@@ -23,41 +23,96 @@ class stdinList():
 		temp = temp.split(', ')				# ['1', '3.2', '[4', '5]', "'a'", "{'b': 4", "'c': 18.0}", 'True', '(7', "'v')"]
 		self.length = len(temp)
 		self.a = temp
-		self.types = stdarray.create1D(0, None)
+		self.contentTypes = stdarray.create1D(self.length, None)
+		self.objTypes = stdarray.create1D(self.length, None)
 
-	
+		self.prep()
+
+
+
 	def prep(self):
 		for i in range(self.length):
 			if len(self.a[i]) > 1:
 				# find lists
 				if self.a[i][0] == '[':
-					self.types[i] = 'list_start'
+					self.contentTypes[i] = 'list_start'
 				elif self.a[i][-1] == ']':
-					self.types[i] = 'list_end'
+					self.contentTypes[i] = 'list_end'
 
 				# find dictionaries
 				elif self.a[i][0] == '{':
-					self.types[i] = 'dict_start'
+					self.contentTypes[i] = 'dict_start'
 				elif self.a[i][-1] == '}':
-					self.types[i] = 'dict_end'
+					self.contentTypes[i] = 'dict_end'
 
 				# find tuples
 				elif self.a[i][0] == '(':
-					self.types[i] = 'tuple_start'
+					self.contentTypes[i] = 'tuple_start'
 				elif self.a[i][-1] == ')':
-					self.types[i] = 'tuple_end'
+					self.contentTypes[i] = 'tuple_end'
 				
-				# everything else can just be marked as "content", as only 
+				# everything else can just be marked as "content"
+				# grab the content's type here too; fewer lines of code
 				else:
-					self.types[i] = 'content'
+					self.contentTypes[i] = 'content'
+					# self.objTypes = canObjType(self.a[i])
 			else:
-				self.types[i] = 'content'
+				self.contentTypes[i] = 'content'
+				# self.objTypes[i] = canObjType(self.a[i])
+		
 
-	
-	# def recurse(self):
+		typeCounter = 0
+		i = 0
+		while i < self.length:
+			j = 0
+
+			if self.contentTypes[i] == 'content':
+				self.objTypes[typeCounter] = canObjType(self.a[i])
+				typeCounter += 1
+				i += 1
+
+			elif self.contentTypes[i] == 'list_start':
+				j += 1
+				while True:
+					if self.contentTypes[i + j] == 'list_end':
+						break
+					j += 1
+				self.objTypes[typeCounter] = list
+				typeCounter += 1
+				i += j + 1
+
+			elif self.contentTypes[i] == 'dict_start':
+				j += 1
+				while True:
+					if self.contentTypes[i + j] == 'dict_end':
+						break
+					j += 1
+				self.objTypes[typeCounter] = dict
+				typeCounter += 1
+				i += j 
+
+			elif self.contentTypes[i] == 'tuple_start':
+				j += 1
+				while True:
+					if self.contentTypes[i + j] == 'tuple_end':
+						break
+					j += 1
+				self.objTypes[typeCounter] = tuple
+				typeCounter += 1
+				i += j
+			
+			else:
+				# self.objTypes[typeCounter] = 'what'
+				# typeCounter += 1
+				i += 1
+		return
 
 
-	
+
+	def recurse(self):
+		raise NotImplementedError()
+
+
 	def convert(self) -> list:
 
 		# Try converting to a number first
@@ -101,6 +156,22 @@ def canFloat(val: str) -> bool:
 		return True
 	except ValueError:
 		return False
+	
+
+
+def canObjType(val: str) -> type:
+	if canFloat(val):
+		if canInt(float(val)):
+			return int
+		else:
+			return float
+	else:
+		if val == 'True' or val == 'False' or val == 'None':
+			return bool
+		else:
+			return str
+		
+
 	
 
 
