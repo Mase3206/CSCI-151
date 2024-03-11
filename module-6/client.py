@@ -52,3 +52,28 @@ if __name__ == '__main__':
 		given_list = helpful.stdinList(given)
 		main(given_list)
 
+
+# =============================================================================
+# EXAMPLE USAGE
+# -----------------------------------------------------------------------------
+# 
+# $ python client.py '[1, 5, 4, 7]'
+#	Avg: 4.25000
+#	Med: 4.50000
+#
+# $ python client.py -h
+#	Simple client program to interface with my wacky module
+# 
+#	ARGUMENT:
+#		list: string-enclosed list object containing ints and/or floats
+# 
+# $ python client.py
+#	Missing required argument: list
+#
+# -----------------------------------------------------------------------------
+# EXTRA NOTES
+# -----------------------------------------------------------------------------
+#
+# 1. The list object MUST be enclosed within quotes.
+#
+# =============================================================================
