@@ -13,7 +13,9 @@
 				"ms-python.python",
 				"donjayamanne.python-environment-manager",
 				"whosydd.snippet-creator",
-				"ms-python.isort"
+				"ms-python.isort",
+				"GitHub.copilot",
+				"GitHub.copilot-chat"
 			]
 		}
 	}
