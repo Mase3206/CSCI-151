@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 // initial function declarations
@@ -12,25 +13,22 @@ int is_exact(char *message);
 
 
 int main(int argc, char **argv) {
-	// debug options
-	char *message = "tacoc.at";
-	argc = 2;
+	// uncomment the following line when debugging
+	// char *message = "tacocat";
+	// argc = 2;
 
 	if (argc > 1) {
-		// char *message = argv[1];
-
-		// type[0]: is this an exact palindrome?
-		// type[1]: is this a palindrome at all?
-		// int type[2];
-		// type[0] = is_exact(message);
+		// comment 2 lines down when debugging
+		// message passed in via cli by the user
+		char *message = argv[1];
 
 		if (is_exact(message) == 1) {
 			printf("This is a palindrome.\n");
 		} else {
 			if (is_palindrome(message) == 1) {
-				printf("This is an inexact palindrome.");
+				printf("This is an inexact palindrome.\n");
 			} else {
-				printf("Sorry, this is not a palindrome.");
+				printf("Sorry, this is not a palindrome.\n");
 			}
 		}
 	} else {
@@ -46,7 +44,7 @@ char *reverse_array(char *message) {
 	int message_length;
 	message_length = strlen(message);
 
-	char flipped[message_length];
+	char *flipped = malloc((message_length + 1) * sizeof(char));
 
 	// assembles the `flipped` array
 	int i;
@@ -54,8 +52,8 @@ char *reverse_array(char *message) {
 		flipped[message_length - i] = *message;
 	}
 
-	char *pointer_flipped = flipped;
-	return pointer_flipped;
+    flipped[message_length] = '\0'; // Don't forget to null-terminate the string
+	return flipped;
 }
 
 
@@ -80,31 +78,35 @@ char *strip_punct(char *message) {
 	int message_length;
 	message_length = strlen(message) + 10;
 
-	// char *iter_message;
-	// iter_message = message;
-
 	char message_array[message_length];
-	snprintf(message_array, "%s\0", (message_length), message);
-
+	strcpy(message_array, message);
 
 	char message_punctless[message_length];
 	int count_not_punct = 0;
 
 	char punct[11] = {',', '.', ':', ';', '\'', '"', '!', '?', '/', '\\', ' '};
 
-	int i;
+	int i, j;
+	// iterate thru message
 	for (i = 0; i < message_length; i++) {
-		int contains_this_punct = array_contains(message, message_length, punct[i]);
+		int is_punct = 0;
 
-		if (contains_this_punct == 0) {
-			char char_to_save = message_array[i];
-			message_punctless[count_not_punct] == char_to_save;
+		// check each punctuation
+		for (j = 0; j < 11; j++) {
+			if (message_array[i] == punct[j]) {
+				is_punct = 1;
+				break;
+			}
+		}
+
+		if (!is_punct) {
+			message_punctless[count_not_punct] = message_array[i];
 			count_not_punct++;
 		}
 	}
 
 	// add the string terminator to mark the end of string, regardless of array size, then return
-	message_punctless[count_not_punct] = "\0";
+	message_punctless[count_not_punct] = "\0"[0];
 	char *pointer_message_punctless = message_punctless;
 	return pointer_message_punctless;
 }
@@ -112,20 +114,12 @@ char *strip_punct(char *message) {
 
 // checks if the message is a palindrome of any kind
 int is_palindrome(char *message) {
+	printf("%s\n", message);
 	char *message_punctless = strip_punct(message);
-	char *reversed_message_punctless = reverse_array(message_punctless);
+	printf("%s\n", message_punctless);
 
-	int message_punctless_length;
-	message_punctless_length = strlen(message_punctless);
-
-	int i;
-	for (i = 0; i < message_punctless_length; i++, message_punctless++, reversed_message_punctless++) {
-		if (*message != *reversed_message_punctless) {
-			return 0;
-		}
-	}
-
-	return 1;
+	int exact = is_exact(message_punctless);
+	return exact;
 }
 
 
@@ -143,5 +137,6 @@ int is_exact(char *message) {
 		}
 	}
 
+	free(reversed_message);
 	return 1;
 }
