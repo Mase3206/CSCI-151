@@ -52,45 +52,16 @@ class Triangle:
 		Draws a perfect triangle using the booksite `stddraw` library. 
 		"""
 		stddraw.line(self.p1[0], self.p1[1], self.p2[0], self.p2[1])
+		# stddraw.show(1)
 		stddraw.line(self.p2[0], self.p2[1], self.p3[0], self.p3[1])
+		# stddraw.show(1)
 		stddraw.line(self.p3[0], self.p3[1], self.p1[0], self.p1[1])
+		# stddraw.show(1)
 
 
 
-class SierpTrio:
-	"""
-	A trio of triangles within a base triangle via recursion.
 
-	Arguments
-	---------
-		level: int representing how far into the Sierpinski triangle you have recursed
-		basePoint: tuple containing leftmost point of leftmost triangle in the Sierp trio
-		globalRootWidth: 
-	"""
-
-	def __init__(self, level: int, basePoint: tuple[int, int]):
-		self.t1 = Triangle(basePoint, globalRootWidth / level)
-
-		# the base points of triangles 2 and 3 are points 2 and 3 on triangle 1, respectively
-		self.t2 = Triangle(self.t1.p2, globalRootWidth / level)
-		self.t3 = Triangle(self.t1.p3, globalRootWidth / level)
-
-		self.draw()
-
-		return SierpTrio(level - 1, self.t3.p1)
-	
-	def draw(self):
-		"""
-		Draws the Sierpinski triangle trio using the booksite `stddraw` library.
-		"""
-
-		self.t1.draw()
-		self.t2.draw()
-		self.t3.draw()
-
-
-
-def drawSierp(level: int) -> None:
+def drawSierp(width: float|int, basePoint: tuple[int, int]) -> None:
 	"""
 	Draws a trio of triangles within a base triangle via recursion.
 
@@ -104,9 +75,23 @@ def drawSierp(level: int) -> None:
 		globalRootOrigin: int set in main(); leftmost point of the root triangle
 	"""
 	
-	trio = SierpTrio(level)
+	if width == globalRootWidth:
+		return
+	
+	else:
+		t1 = Triangle(basePoint, width)
 
+		# the base points of triangles 2 and 3 are points 2 and 3 on triangle 1, respectively
+		t2 = Triangle(t1.p2, width)
+		t3 = Triangle(t1.p3, width)
 
+		t1.draw()
+		t2.draw()
+		t3.draw()
+
+		drawSierp(width / 2, t1.p1)
+		drawSierp(width / 2, t2.p1)
+		drawSierp(width / 2, t3.p1)
 
 
 
@@ -115,15 +100,17 @@ def main(levels: int):
 	Takes `levels` levels of Sierpinski triangles and draws `3 ^ (levels - 1)` of them in the correct pattern
 	"""
 
+	levels += 1
+
 	global globalRootWidth, globalRootOrigin
 
-	xMin = -1
-	xMax = 1
+	xMin = 0
+	xMax = 2
 	yMin = xMin
 	yMax = xMax
 
 	# set the root width and origins of the root triangle globally
-	globalRootWidth = abs(xMin) + abs(xMax)
+	globalRootWidth = abs(xMin) + abs(xMax) / (2 ** (levels))
 	globalRootOrigin = (xMin, yMin)
 
 	stdio.writef('Setting window X scale from %d to %d\n', xMin, xMax)
@@ -136,15 +123,18 @@ def main(levels: int):
 	if levels < 1:
 		raise ValueError('Number of levels must be positive.')
 	
-	elif levels == 1:
-		# root triangle
-		rootTriangle = Triangle(globalRootOrigin, globalRootWidth)
-		rootTriangle.draw()
+	# elif levels == 1:
+	# 	# root triangle
+	# 	rootTriangle = Triangle(globalRootOrigin, globalRootWidth)
+	# 	rootTriangle.draw()
 	
 	else:
 		# root triangle
-		rootTriangle = Triangle(globalRootOrigin, globalRootWidth)
+		rootTriangle = Triangle(globalRootOrigin, globalRootWidth * (2 ** (levels)))
 		rootTriangle.draw()
+
+		width = globalRootWidth * (2 ** (levels - 1))
+		drawSierp(width, rootTriangle.p1)
 
 
 	stddraw.show()
@@ -154,4 +144,4 @@ def main(levels: int):
 if __name__ == '__main__':
 	import sys
 	stdio.writeln()
-	main(1)
+	main(int(sys.argv[1]))
