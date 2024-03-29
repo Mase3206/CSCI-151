@@ -74,7 +74,6 @@ def drawSierp(width: float|int, basePoint: tuple[int, int]) -> None:
 		globalRootWidth: int set in main(); width of the root (initial, largest) triangle
 		globalRootOrigin: int set in main(); leftmost point of the root triangle
 	"""
-	
 	if width == globalRootWidth:
 		return
 	
@@ -119,6 +118,7 @@ def main(levels: int):
 	stdio.writef('Setting window Y scale from %d to %d\n', yMin, yMax)
 	stddraw.setYscale(yMin, yMax)
 
+	stdio.writef('Total drawn triangles: %d\n', sierpQty(levels - 1))
 
 	if levels < 1:
 		raise ValueError('Number of levels must be positive.')
@@ -137,7 +137,16 @@ def main(levels: int):
 		drawSierp(width, rootTriangle.p1)
 
 
-	stddraw.show()
+
+def sierpQty(levels: int) -> int:
+	"""
+	Given the number of levels, return the number of triangles drawn in a Sierpinski Triangle pattern.
+	"""
+	qty = 0
+	for i in range(levels):
+		qty += 3 ** i
+	
+	return qty
 
 
 
@@ -145,6 +154,8 @@ if __name__ == '__main__':
 	import sys
 	stdio.writeln()
 	main(int(sys.argv[1]))
+	stddraw.show()
+
 
 # =============================================================================
 # EXAMPLE USAGE
