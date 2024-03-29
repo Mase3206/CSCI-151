@@ -145,3 +145,24 @@ if __name__ == '__main__':
 	import sys
 	stdio.writeln()
 	main(int(sys.argv[1]))
+
+# =============================================================================
+# EXAMPLE USAGE
+# -----------------------------------------------------------------------------
+# 
+# $ python sierpinski.py 4
+#	[pygame output]
+#
+# $ python sierpinski.py 6
+#	[pygame output]
+#
+#
+# -----------------------------------------------------------------------------
+# EXTRA NOTES
+# -----------------------------------------------------------------------------
+#
+# 1. The argument passed in the command line represents the number of "levels"
+#	 of triangles drawn. One "level" is a trio of smaller triangles set within
+#	 a larger triangle. 
+#
+# =============================================================================
