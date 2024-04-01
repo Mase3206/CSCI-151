@@ -27,11 +27,19 @@ class Triangle:
 
 	Arguments
 	---------
-		p1: tuple x and y coordinates of left-most point
-		base: int base width
-		height: int height
+		p1 (tuple): x and y coordinates of left-most point
+		base (int): base width
+
+	Variables
+	---------
+		base (int): given base width
+		height (int): calculated height
+		p1 (tuple): given left-most point
+		p2 (tuple): calculated right-most point
+		p3 (tuple): calculated top point
 	"""
-	def __init__(self, p1: tuple[int, int], base: int):
+
+	def __init__(self, p1: tuple[int, int], base: int) -> None:
 		self.base = base
 		self.height = math.sqrt(base ** 2 - (base / 2) ** 2)
 
@@ -47,17 +55,14 @@ class Triangle:
 		self.p3 = (p1[0] + (base / 2), p1[1] + self.height)
 
 	
-	def draw(self):
+	def draw(self) -> None:
 		"""
 		Draws a perfect triangle using the booksite `stddraw` library. 
 		"""
-		stddraw.line(self.p1[0], self.p1[1], self.p2[0], self.p2[1])
-		# stddraw.show(1)
-		stddraw.line(self.p2[0], self.p2[1], self.p3[0], self.p3[1])
-		# stddraw.show(1)
-		stddraw.line(self.p3[0], self.p3[1], self.p1[0], self.p1[1])
-		# stddraw.show(1)
 
+		stddraw.line(self.p1[0], self.p1[1], self.p2[0], self.p2[1])
+		stddraw.line(self.p2[0], self.p2[1], self.p3[0], self.p3[1])
+		stddraw.line(self.p3[0], self.p3[1], self.p1[0], self.p1[1])
 
 
 
@@ -67,13 +72,10 @@ def drawSierp(width: float|int, basePoint: tuple[int, int]) -> None:
 
 	Arguments
 	---------
-		level: int representing how far into the Sierpinski triangle you have recursed
-	
-	Globals Used
-	------------
-		globalRootWidth: int set in main(); width of the root (initial, largest) triangle
-		globalRootOrigin: int set in main(); leftmost point of the root triangle
+		width (float | int): width of the base of the triangles to draw
+		basePoint (tuple): left-most point (p1) that smaller triangle 1 is based on
 	"""
+
 	if width == globalRootWidth:
 		return
 	
@@ -94,9 +96,13 @@ def drawSierp(width: float|int, basePoint: tuple[int, int]) -> None:
 
 
 
-def main(levels: int):
+def main(levels: int) -> None:
 	"""
-	Takes `levels` levels of Sierpinski triangles and draws `3 ^ (levels - 1)` of them in the correct pattern
+	Draws `3 ^ (levels - 1)` triangles in the Sierpinski Triangle pattern.
+
+	Arguments
+	---------
+		levels (int): number of levels of smaller triangles to recursively create (does not include the root triangle)
 	"""
 
 	levels += 1
@@ -123,11 +129,6 @@ def main(levels: int):
 	if levels < 1:
 		raise ValueError('Number of levels must be positive.')
 	
-	# elif levels == 1:
-	# 	# root triangle
-	# 	rootTriangle = Triangle(globalRootOrigin, globalRootWidth)
-	# 	rootTriangle.draw()
-	
 	else:
 		# root triangle
 		rootTriangle = Triangle(globalRootOrigin, globalRootWidth * (2 ** (levels)))
@@ -141,7 +142,16 @@ def main(levels: int):
 def sierpQty(levels: int) -> int:
 	"""
 	Given the number of levels, return the number of triangles drawn in a Sierpinski Triangle pattern.
+
+	Arguments
+	---------
+		levels (int): number of levels of smaller triangles to recursively create (does not include the root triangle)
+	
+	Returns
+	-------
+		qty (int) of triangles drawn
 	"""
+
 	qty = 0
 	for i in range(levels):
 		qty += 3 ** i
@@ -162,11 +172,21 @@ if __name__ == '__main__':
 # -----------------------------------------------------------------------------
 # 
 # $ python sierpinski.py 4
+#	pygame intro
+#
+#	Setting window X scale from 0 to 2
+#	Setting window Y scale from 0 to 2
+#	Total drawn triangles: 40
 #	[pygame output]
+#
 #
 # $ python sierpinski.py 6
-#	[pygame output]
+#	pygame intro
 #
+#	Setting window X scale from 0 to 2
+#	Setting window Y scale from 0 to 2
+#	Total drawn triangles: 364
+#	[pygame output]
 #
 # -----------------------------------------------------------------------------
 # EXTRA NOTES
@@ -174,6 +194,9 @@ if __name__ == '__main__':
 #
 # 1. The argument passed in the command line represents the number of "levels"
 #	 of triangles drawn. One "level" is a trio of smaller triangles set within
-#	 a larger triangle. 
+#	 a larger triangle; it does not include the root triangle.
 #
 # =============================================================================
+
+__author__ = 'Noah S. Roberts'
+__license__ = 'GPLv3'
