@@ -25,6 +25,7 @@ def redOnly(orig: picture.Picture) -> picture.Picture:
 
 	new = picture.Picture(dimX, dimY)
 
+
 	for x in range(dimX):
 		for y in range(dimY):
 			new.set(
@@ -32,6 +33,7 @@ def redOnly(orig: picture.Picture) -> picture.Picture:
 				color.Color(orig.get(x, y).getRed(), 0, 0)
 			)
 	
+
 	return new
 
 
@@ -42,6 +44,7 @@ def greenOnly(orig: picture.Picture) -> picture.Picture:
 
 	new = picture.Picture(dimX, dimY)
 
+
 	for x in range(dimX):
 		for y in range(dimY):
 			new.set(
@@ -49,6 +52,7 @@ def greenOnly(orig: picture.Picture) -> picture.Picture:
 				color.Color(0, orig.get(x, y).getGreen(), 0)
 			)
 	
+
 	return new
 
 
@@ -59,6 +63,7 @@ def blueOnly(orig: picture.Picture) -> picture.Picture:
 
 	new = picture.Picture(dimX, dimY)
 
+
 	for x in range(dimX):
 		for y in range(dimY):
 			new.set(
@@ -66,7 +71,45 @@ def blueOnly(orig: picture.Picture) -> picture.Picture:
 				color.Color(0, 0, orig.get(x, y).getBlue())
 			)
 	
+
 	return new
+
+
+
+def sideBySide(orig: picture.Picture) -> picture.Picture:
+	dimX = orig.width()
+	dimY = orig.height()
+
+	new = picture.Picture(dimX * 3, dimY)
+
+
+	for x in range(dimX):
+		for y in range(dimY):
+			new.set(
+				x + (dimX * 0),
+				y + (dimY * 0),
+				color.Color(orig.get(x, y).getRed(), 0, 0)
+			)
+
+	for x in range(dimX):
+		for y in range(dimY):
+			new.set(
+				x + (dimX * 1),
+				y,
+				color.Color(0, orig.get(x, y).getGreen(), 0)
+			)
+
+	for x in range(dimX):
+		for y in range(dimY):
+			new.set(
+				x + (dimX * 2),
+				y,
+				color.Color(0, 0, orig.get(x, y).getBlue())
+			)
+
+
+	return new
+
 
 
 
@@ -90,10 +133,11 @@ def main(orig: picture.Picture) -> None:
 	stddraw.setXscale(-(dimX // 2), (dimX // 2) * 5)
 	stddraw.setYscale(-(dimY // 2), (dimY // 2))
 
-	stddraw.picture(redOnly(orig), x=0, y=0)
-	stddraw.picture(greenOnly(orig), x=dimX, y=0)
-	stddraw.picture(blueOnly(orig), x=dimX * 2, y=0)
+	new = sideBySide(orig)
+	new.save('im3-out.jpg')
+	stddraw.picture(new)
 	stddraw.show()
+	
 
 
 

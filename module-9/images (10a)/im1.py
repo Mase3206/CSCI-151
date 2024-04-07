@@ -88,6 +88,7 @@ def main(pic: picture.Picture) -> None:
 	if not isAlreadyGrayscale(pic):
 		pic = toGrayscale(pic)
 	
+	pic.save('im1-out.jpg')
 	values = countGrayscale(pic)
 	plotGrayscale(values)
 

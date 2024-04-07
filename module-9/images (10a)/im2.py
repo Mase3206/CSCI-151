@@ -140,6 +140,7 @@ def main(pic: picture.Picture, angle: float) -> None:
 	# stddraw.show()
  
 	new = rotatep90(pic, theta)
+	new.save('im2-out.jpg')
 	stddraw.picture(new)
 	stddraw.show()
 
