@@ -13,3 +13,14 @@
 # Book Excercise 3.1.5
 # =============================================================================
 
+import stdio, stdarray, stddraw, stdstats, picture, sys, random, luminance
+
+
+
+def main(pic: picture.Picture) -> None:
+	return
+
+
+
+if __name__ == '__main__':
+	main(picture.Picture(sys.argv[1]))
