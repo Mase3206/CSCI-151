@@ -16,42 +16,87 @@
 # Book Excercise 3.1.5
 # =============================================================================
 
-import stdio, stdarray, stddraw, stdstats, picture, sys, random, luminance, math
+import stdio, stdarray, stddraw, stdstats, picture, sys, random, luminance, math, color
+
+
+def redOnly(orig: picture.Picture) -> picture.Picture:
+	dimX = orig.width()
+	dimY = orig.height()
+
+	new = picture.Picture(dimX, dimY)
+
+	for x in range(dimX):
+		for y in range(dimY):
+			new.set(
+				x, y,
+				color.Color(orig.get(x, y).getRed(), 0, 0)
+			)
+	
+	return new
 
 
 
-def shearX(pic: picture.Picture, angle: float) -> picture.Picture:
-	skew = -math.tan(angle / 2)
+def greenOnly(orig: picture.Picture) -> picture.Picture:
+	dimX = orig.width()
+	dimY = orig.height()
 
-	for y in range(pic.height):
-		for x in range(pic.width):
-			xNew = x + int(skew * y)
-			pic.set(xNew, y, pic.get(x, y))
-		
-	return pic
+	new = picture.Picture(dimX, dimY)
 
-
-
-def shearY(pic: picture.Picture, angle: float) -> picture.Picture:
-	skew = math.sin(angle)
-
-	for x in range(pic.width):
-		for y in range(pic.height):
-			yNew = y + int(skew * x)
-			pic.set(x, yNew, pic.get(x, y))
-
-	return pic
+	for x in range(dimX):
+		for y in range(dimY):
+			new.set(
+				x, y,
+				color.Color(0, orig.get(x, y).getGreen(), 0)
+			)
+	
+	return new
 
 
 
+def blueOnly(orig: picture.Picture) -> picture.Picture:
+	dimX = orig.width()
+	dimY = orig.height()
 
-def main(pic: picture.Picture) -> None:
-	step1 = shearX(pic, 90)
-	step2 = shearY(step1, 90)
-	step3 = shearX(step2, 90)
-	stddraw.picture(step3)
+	new = picture.Picture(dimX, dimY)
+
+	for x in range(dimX):
+		for y in range(dimY):
+			new.set(
+				x, y,
+				color.Color(0, 0, orig.get(x, y).getBlue())
+			)
+	
+	return new
+
+
+
+
+def _test():
+	orig = picture.Picture('mandrill.jpg')
+
+	stddraw.setCanvasSize(orig.width(), orig.height())
+
+	stddraw.picture(redOnly(orig)); stddraw.show(2000)
+	stddraw.picture(greenOnly(orig)); stddraw.show(2000)
+	stddraw.picture(blueOnly(orig)); stddraw.show(2000)
+
+
+
+def main(orig: picture.Picture) -> None:
+	dimX = orig.width()
+	dimY = orig.height()
+
+	stddraw.setCanvasSize(dimX * 3, dimY)
+	stddraw.setXscale(-(dimX // 2), (dimX // 2) * 5)
+	stddraw.setYscale(-(dimY // 2), (dimY // 2))
+
+	stddraw.picture(redOnly(orig), x=0, y=0)
+	stddraw.picture(greenOnly(orig), x=dimX, y=0)
+	stddraw.picture(blueOnly(orig), x=dimX * 2, y=0)
+	stddraw.show()
 
 
 
 if __name__ == '__main__':
 	main(picture.Picture(sys.argv[1]))
+	# _test()
