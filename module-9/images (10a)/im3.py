@@ -134,7 +134,7 @@ def main(orig: picture.Picture) -> None:
 	stddraw.setYscale(-(dimY // 2), (dimY // 2))
 
 	new = sideBySide(orig)
-	new.save('im3-pic.jpg')
+	new.save('im3-out.jpg')
 	stddraw.picture(new)
 	stddraw.show()
 	
