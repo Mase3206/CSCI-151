@@ -16,7 +16,7 @@
 import stdio, stdarray, stddraw, stdstats, picture, sys, random, luminance, math
 
 
-
+# unused
 def shearX(pic: picture.Picture, angle: float) -> picture.Picture:
 	stdio.writeln('\nX shear')
 	skew = -math.tan(angle / 2)
@@ -37,7 +37,7 @@ def shearX(pic: picture.Picture, angle: float) -> picture.Picture:
 	return picNew
 
 
-
+# unused
 def shearY(pic: picture.Picture, angle: float) -> picture.Picture:
 	stdio.writeln('\nY shear')
 	skew = math.sin(angle/2)
@@ -59,24 +59,17 @@ def shearY(pic: picture.Picture, angle: float) -> picture.Picture:
 
 
 
-def rotatep90(orig: picture.Picture, theta: float) -> picture.Picture:
+def rotatep90(orig: picture.Picture) -> picture.Picture:
 	dimXorig = orig.width()
 	dimYorig = orig.height()
-
-	# dimXnew = int(abs(dimXorig * math.cos(theta)) + abs(dimYorig * math.sin(theta))) + 1
-	# dimYnew = int(abs(dimYorig * math.cos(theta)) + abs(dimXorig * math.sin(theta))) + 1
  
 	dimXnew = dimYorig
 	dimYnew = dimXorig
-
-	print(dimXorig, dimYorig)
-	print(dimXnew, dimYnew)
 
 	new = picture.Picture(dimXnew, dimYnew)
 
 	for x in range(dimXorig):
 		for y in range(dimYorig):
-			print(x, (dimYorig - y-1))
 			new.set(
 				x=(dimYorig - y-1),
 				y=x,
@@ -90,74 +83,13 @@ def rotatep90(orig: picture.Picture, theta: float) -> picture.Picture:
 
 
 
-
-
-# def shearTransform(orig: picture.Picture, theta: float):
-	# dimXorig = orig.width()
-	# dimYorig = orig.height()
-
-	# dimXnew = int(abs(dimXorig * math.cos(theta)) + abs(dimYorig * math.sin(theta))) + 1
-	# dimYnew = int(abs(dimYorig * math.cos(theta)) + abs(dimXorig * math.sin(theta))) + 1
-
-	# new = picture.Picture(dimXnew, dimYnew)
-
-
-# 	for y in range(dimYorig):
-# 		for x in range(dimXorig):
-# 			xNew = int(math.cos(theta) * x + math.sin(theta) * y)
-# 			yNew = int(-math.sin(theta) * x + math.cos(theta) * y)
-# 			print(xNew, yNew)
-
-# 			new.set(
-# 				x=xNew,
-# 				y=yNew,
-# 				c=orig.get(x, y)
-# 			)
-
-# 			print(orig.get(x, y), new.get(xNew, yNew))
-	
-# 	stddraw.picture(new)
-# 	stddraw.show()
-# 	return new
-
-
-
-def main(pic: picture.Picture, angle: float) -> None:
-	theta = math.radians(angle)
-
-	dimX = pic.width()
-	dimY = pic.height()
-
-	dimYnew = int(abs(dimY * math.cos(theta)) + abs(dimX * math.sin(theta))) + 1
-	dimXnew = int(abs(dimX * math.cos(theta)) + abs(dimY * math.sin(theta))) + 1
-
-	stddraw.picture(pic)
-	stddraw.show(2000)
-
-	# asdfasdf = shearTransform(orig=pic, theta=theta)
-
-	# stddraw.picture(asdfasdf)
-	# stddraw.show()
- 
-	new = rotatep90(pic, theta)
-	new.save('im2-out.jpg')
+def main(pic: picture.Picture) -> None:
+	new = rotatep90(pic)
+	new.save('im2-pic.jpg')
 	stddraw.picture(new)
 	stddraw.show()
 
 
-	# step1 = shearX(pic, theta)
-	# stddraw.picture(step1)
-	# stddraw.show(2000)
-	
-	# step2 = shearY(step1, theta)
-	# stddraw.picture(step2)
-	# stddraw.show(2000)
-
-	# step3 = shearX(step2, theta)
-	# stddraw.picture(step3)
-	# stddraw.show()
-
-
 
 if __name__ == '__main__':
-	main(picture.Picture(sys.argv[1]), float(sys.argv[2]))
+	main(picture.Picture(sys.argv[1]))

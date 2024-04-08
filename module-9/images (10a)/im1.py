@@ -80,6 +80,7 @@ def plotGrayscale(values: list[int]) -> None:
 	for i in range(256):
 		stddraw.filledRectangle(i, 0, 1, values[i])
 
+	stddraw.save('im1-graph.jpg')
 	stddraw.show()
 
 
@@ -88,7 +89,7 @@ def main(pic: picture.Picture) -> None:
 	if not isAlreadyGrayscale(pic):
 		pic = toGrayscale(pic)
 	
-	pic.save('im1-out.jpg')
+	pic.save('im1-pic.jpg')
 	values = countGrayscale(pic)
 	plotGrayscale(values)
 
