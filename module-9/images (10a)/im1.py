@@ -76,10 +76,12 @@ def countGrayscale(pic: picture.Picture) -> list[int]:
 
 def plotGrayscale(values: list[int]) -> None:
 	stddraw.setXscale(-1, 256 + 1)
-	stddraw.setYscale(0, max(values) + 1)
+	stddraw.setYscale(0, max(values) * 1.02)
+	stddraw.setCanvasSize(1100, 400)
 	for i in range(256):
-		stddraw.filledRectangle(i, 0, 1, values[i])
+		stddraw.filledRectangle(i, 0, 1.2, values[i])
 
+	stddraw.save('im1-graph.png')
 	stddraw.show()
 
 
@@ -88,7 +90,7 @@ def main(pic: picture.Picture) -> None:
 	if not isAlreadyGrayscale(pic):
 		pic = toGrayscale(pic)
 	
-	pic.save('im1-out.jpg')
+	pic.save('im1-pic.jpg')
 	values = countGrayscale(pic)
 	plotGrayscale(values)
 
