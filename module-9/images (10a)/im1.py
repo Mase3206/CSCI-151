@@ -15,40 +15,67 @@
 # =============================================================================
 
 
-import stdio, stdarray, stddraw, stdstats, picture, sys, random, luminance
+import random
+import sys
 
+import luminance
+import picture
+import stdarray
+import stdio
+import stddraw
 
 
 def isAlreadyGrayscale(pic: picture.Picture) -> bool:
+	"""
+	Samples 100 random pixels to check whether or not the image is grayscale.
+
+	Argument
+	--------
+		pic (Picture): booksite Picture object
+
+	Returns
+	-------
+		bool: true if all 100 trios of points are equal to each other, false if any one value in a trio is different
+	"""
+
 	randomX = stdarray.create1D(10, 0)
 	randomY = stdarray.create1D(10, 0)
 
+	# 10 random x locations
 	for i in range(10):
 		randomX.append(random.randint(0, pic.width()))
 
+	# 10 random y locations
 	for i in range(10):
 		randomY.append(random.randint(0, pic.height()))
 
 	
+	# 100 random points
 	for i in range(10):
 		for j in range(10):
 			same = stdarray.create1D(3, None)
 			comparison = luminance.toGray(pic.get(i, j))
 
+			# compares actual red, green, and blue values to the point's luminance
 			same = [
 				pic.get(randomX[i], randomY[j]).getRed() == comparison.getRed(),
 				pic.get(randomX[i], randomY[j]).getGreen() == comparison.getGreen(),
 				pic.get(randomX[i], randomY[j]).getBlue() == comparison.getBlue()
 			]
 
-			if same == [True, True, True]:
-				return True
-			else:
+			# if any comparison is not True, immediately return False
+			if same != [True, True, True]:
 				return False
+	
+	# if every single point passed, now return True
+	return True
 			
 	
 
 def toGrayscale(pic: picture.Picture) -> picture.Picture:
+	"""
+	Converts each pixel in the given picture to grayscale, then returns it.
+	"""
 	for i in range(pic.width()):
 		for j in range(pic.height()):
 			pic.set(
@@ -64,6 +91,11 @@ def toGrayscale(pic: picture.Picture) -> picture.Picture:
 
 
 def countGrayscale(pic: picture.Picture) -> list[int]:
+	"""
+	Counts the quantity of pixels with a given grayscale value (luminance). 
+
+	Ex: at luminance = 24, found 13 pixels
+	"""
 	values = stdarray.create1D(256, 0)
 
 	for x in range(pic.width()):
@@ -75,10 +107,15 @@ def countGrayscale(pic: picture.Picture) -> list[int]:
 	
 
 def plotGrayscale(values: list[int]) -> None:
+	"""
+	Plots the distribution of grayscale pixels on a histogram.
+	"""
 	stddraw.setXscale(-1, 256 + 1)
-	stddraw.setYscale(0, max(values) + 1)
+	stddraw.setYscale(0, max(values) * 1.02)
+	stddraw.setCanvasSize(1100, 400)
+
 	for i in range(256):
-		stddraw.filledRectangle(i, 0, 1, values[i])
+		stddraw.filledRectangle(i, 0, 1.2, values[i])
 
 	stddraw.save('im1-graph.jpg')
 	stddraw.show()
@@ -87,6 +124,7 @@ def plotGrayscale(values: list[int]) -> None:
 
 def main(pic: picture.Picture) -> None:
 	if not isAlreadyGrayscale(pic):
+		stdio.writeln('Picture is not already grayscale; fixing...')
 		pic = toGrayscale(pic)
 	
 	pic.save('im1-pic.jpg')

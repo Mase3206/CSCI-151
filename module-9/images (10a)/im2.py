@@ -13,9 +13,16 @@
 # Book Excercise 3.1.5
 # =============================================================================
 
-import stdio, stdarray, stddraw, stdstats, picture, sys, random, luminance, math
+import math
+import sys
+
+import picture
+import stddraw
+import stdio
 
 
+# The following two functions are unused from an attempt at a shear rotation.
+# That attempt failed.
 # unused
 def shearX(pic: picture.Picture, angle: float) -> picture.Picture:
 	stdio.writeln('\nX shear')
@@ -59,13 +66,18 @@ def shearY(pic: picture.Picture, angle: float) -> picture.Picture:
 
 
 
-def rotatep90(orig: picture.Picture) -> picture.Picture:
+def rotateR90(orig: picture.Picture) -> picture.Picture:
+	"""
+	Rotates the picture to the right 90 degrees.
+	"""
 	dimXorig = orig.width()
 	dimYorig = orig.height()
- 
+	
+	# x=y, y=x
 	dimXnew = dimYorig
 	dimYnew = dimXorig
 
+	# do not modify the existing picture. it will not work.
 	new = picture.Picture(dimXnew, dimYnew)
 
 	for x in range(dimXorig):
@@ -84,8 +96,17 @@ def rotatep90(orig: picture.Picture) -> picture.Picture:
 
 
 def main(pic: picture.Picture) -> None:
-	new = rotatep90(pic)
+	new = rotateR90(pic)
 	new.save('im2-pic.jpg')
+
+
+	dimX = new.width()
+	dimY = new.height()
+
+	stddraw.setCanvasSize(dimX, dimY)
+	stddraw.setXscale(-(dimX // 2), (dimX // 2))
+	stddraw.setYscale(-(dimY // 2), (dimY // 2))
+
 	stddraw.picture(new)
 	stddraw.show()
 

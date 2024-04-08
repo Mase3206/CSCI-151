@@ -16,73 +16,25 @@
 # Book Excercise 3.1.5
 # =============================================================================
 
-import stdio, stdarray, stddraw, stdstats, picture, sys, random, luminance, math, color
+import sys
 
-
-def redOnly(orig: picture.Picture) -> picture.Picture:
-	dimX = orig.width()
-	dimY = orig.height()
-
-	new = picture.Picture(dimX, dimY)
-
-
-	for x in range(dimX):
-		for y in range(dimY):
-			new.set(
-				x, y,
-				color.Color(orig.get(x, y).getRed(), 0, 0)
-			)
-	
-
-	return new
-
-
-
-def greenOnly(orig: picture.Picture) -> picture.Picture:
-	dimX = orig.width()
-	dimY = orig.height()
-
-	new = picture.Picture(dimX, dimY)
-
-
-	for x in range(dimX):
-		for y in range(dimY):
-			new.set(
-				x, y,
-				color.Color(0, orig.get(x, y).getGreen(), 0)
-			)
-	
-
-	return new
-
-
-
-def blueOnly(orig: picture.Picture) -> picture.Picture:
-	dimX = orig.width()
-	dimY = orig.height()
-
-	new = picture.Picture(dimX, dimY)
-
-
-	for x in range(dimX):
-		for y in range(dimY):
-			new.set(
-				x, y,
-				color.Color(0, 0, orig.get(x, y).getBlue())
-			)
-	
-
-	return new
+import color
+import picture
+import stddraw
 
 
 
 def sideBySide(orig: picture.Picture) -> picture.Picture:
+	"""
+	Grabs the red, green, and blue channels of the original image and draws them side-by-side. 
+	"""
 	dimX = orig.width()
 	dimY = orig.height()
 
 	new = picture.Picture(dimX * 3, dimY)
 
 
+	# RED
 	for x in range(dimX):
 		for y in range(dimY):
 			new.set(
@@ -91,6 +43,7 @@ def sideBySide(orig: picture.Picture) -> picture.Picture:
 				color.Color(orig.get(x, y).getRed(), 0, 0)
 			)
 
+	# GREEN
 	for x in range(dimX):
 		for y in range(dimY):
 			new.set(
@@ -99,6 +52,7 @@ def sideBySide(orig: picture.Picture) -> picture.Picture:
 				color.Color(0, orig.get(x, y).getGreen(), 0)
 			)
 
+	# BLUE
 	for x in range(dimX):
 		for y in range(dimY):
 			new.set(
@@ -109,19 +63,6 @@ def sideBySide(orig: picture.Picture) -> picture.Picture:
 
 
 	return new
-
-
-
-
-
-def _test():
-	orig = picture.Picture('mandrill.jpg')
-
-	stddraw.setCanvasSize(orig.width(), orig.height())
-
-	stddraw.picture(redOnly(orig)); stddraw.show(2000)
-	stddraw.picture(greenOnly(orig)); stddraw.show(2000)
-	stddraw.picture(blueOnly(orig)); stddraw.show(2000)
 
 
 
@@ -143,4 +84,3 @@ def main(orig: picture.Picture) -> None:
 
 if __name__ == '__main__':
 	main(picture.Picture(sys.argv[1]))
-	# _test()
