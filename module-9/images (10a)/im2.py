@@ -114,3 +114,21 @@ def main(pic: picture.Picture) -> None:
 
 if __name__ == '__main__':
 	main(picture.Picture(sys.argv[1]))
+
+
+# =============================================================================
+# EXAMPLE USAGE
+# -----------------------------------------------------------------------------
+# 
+# $ python im2.py mandrill.py
+#	[pygame hello]
+#	(rotated picture - pygame output)
+#
+# -----------------------------------------------------------------------------
+# EXTRA NOTES
+# -----------------------------------------------------------------------------
+#
+# 1. I wasn't able to figure out skew rotation. I'm not sure what was making it 
+#	 break, but you saw what it spit out in my attempts.
+#
+# =============================================================================
