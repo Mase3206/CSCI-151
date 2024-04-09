@@ -38,8 +38,8 @@ def isAlreadyGrayscale(pic: picture.Picture) -> bool:
 		bool: true if all 100 trios of points are equal to each other, false if any one value in a trio is different
 	"""
 
-	randomX = stdarray.create1D(10, 0)
-	randomY = stdarray.create1D(10, 0)
+	randomX = stdarray.create1D(0, 0)
+	randomY = stdarray.create1D(0, 0)
 
 	# 10 random x locations
 	for i in range(10):
@@ -54,7 +54,7 @@ def isAlreadyGrayscale(pic: picture.Picture) -> bool:
 	for i in range(10):
 		for j in range(10):
 			same = stdarray.create1D(3, None)
-			comparison = luminance.toGray(pic.get(i, j))
+			comparison = luminance.toGray(pic.get(randomX[i], randomY[j]))
 
 			# compares actual red, green, and blue values to the point's luminance
 			same = [
@@ -63,9 +63,27 @@ def isAlreadyGrayscale(pic: picture.Picture) -> bool:
 				pic.get(randomX[i], randomY[j]).getBlue() == comparison.getBlue()
 			]
 
+   
+			# Be verbose in your findings!
+			# if same != [True, True, True]:
+			# 	stdio.write('Found difference: ')
+				
+			# 	if same[0] == False:
+			# 		stdio.writef('red @ %dx%d = %d, expected %d', randomX[i], randomY[j], pic.get(randomX[i], randomY[j]).getRed(), comparison.getRed())
+			# 	elif same[1] == False:
+			# 		stdio.writef('green @ %dx%d = %d, expected %d', randomX[i], randomY[j], pic.get(randomX[i], randomY[j]).getGreen(), comparison.getGreen())
+			# 	elif same[2] == False:
+			# 		stdio.writef('blue @ %dx%d = %d, expected %d', randomX[i], randomY[j], pic.get(randomX[i], randomY[j]).getBlue(), comparison.getBlue())
+			# 	else:
+			# 		stdio.write('erronious ')
+
+			# 	stdio.writeln()
+
+
 			# if any comparison is not True, immediately return False
 			if same != [True, True, True]:
 				return False
+			
 	
 	# if every single point passed, now return True
 	return True
@@ -117,21 +135,66 @@ def plotGrayscale(values: list[int]) -> None:
 	for i in range(256):
 		stddraw.filledRectangle(i, 0, 1.2, values[i])
 
+	stdio.write('Saving histogram as im1-graph.jpg... ')
 	stddraw.save('im1-graph.jpg')
+	stdio.write('done.\n')
+
 	stddraw.show()
 
 
 
 def main(pic: picture.Picture) -> None:
 	if not isAlreadyGrayscale(pic):
-		stdio.writeln('Picture is not already grayscale; fixing...')
+		stdio.write('Picture is not already grayscale; fixing... ')
 		pic = toGrayscale(pic)
+		stdio.write('done.\n')
+	else:
+		stdio.writeln('Picture is already grayscale')
 	
+	stdio.write('Saving grayscale image as im1-pic.jpg... ')
 	pic.save('im1-pic.jpg')
+	stdio.write('done.\n')
+
+	stdio.write('Counting grayscale values... ')
 	values = countGrayscale(pic)
+	stdio.write('done.\n')
+
 	plotGrayscale(values)
 
 
 
 if __name__ == '__main__':
 	main(picture.Picture(sys.argv[1]))
+
+
+
+# =============================================================================
+# EXAMPLE USAGE
+# -----------------------------------------------------------------------------
+# 
+# $ python im1.py mandrill.py
+# 	[pygame hello]
+#	Picture is not already grayscale; fixing... done.
+#	Saving grayscale image as im1-pic.jpg... done.
+#	Counting grayscale values... done.
+#	Saving histogram as im1-graph.jpg... done.
+#	(histogram - pygame output)
+# 
+# 
+# $ python im1.py im1-pic.jpg   # this is already grayscale
+#	[pygame hello]
+#	Picture is already grayscale
+#	Saving grayscale image as im1-pic.jpg... done.
+#	Counting grayscale values... done.
+#	Saving histogram as im1-graph.jpg... done.
+#	(histogram - pygame output)
+#
+# -----------------------------------------------------------------------------
+# EXTRA NOTES
+# -----------------------------------------------------------------------------
+#
+# 1. If you give it an image file that is not already grayscale, it will
+#	 convert it automatically. If it detects that the image *is* already
+#	 grayscale, it will not convert it at all.
+#
+# =============================================================================
