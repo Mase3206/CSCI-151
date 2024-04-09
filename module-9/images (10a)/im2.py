@@ -96,8 +96,13 @@ def rotateR90(orig: picture.Picture) -> picture.Picture:
 
 
 def main(pic: picture.Picture) -> None:
+	stdio.write('Rotating the image 90 degrees to the right via a "pixel swap"... ')
 	new = rotateR90(pic)
+	stdio.write("done.\n")
+
+	stdio.write('Saving rotated image as im2-pic.jpg... ')
 	new.save('im2-pic.jpg')
+	stdio.write('done.\n')
 
 
 	dimX = new.width()
@@ -122,6 +127,8 @@ if __name__ == '__main__':
 # 
 # $ python im2.py mandrill.py
 #	[pygame hello]
+#	Rotating the image 90 degrees to the right via a "pixel swap"... done.
+#	Saving rotated image as im2-pic.jpg... done.
 #	(rotated picture - pygame output)
 #
 # -----------------------------------------------------------------------------
