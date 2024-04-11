@@ -1,6 +1,9 @@
-None
-	4/1/2024   Louisiana State       0.448      9 20.000000  0.450     12     41
-	3/30/2024  Colorado              0.591      3 11.000000  0.273     15     29
-	3/25/2024  West Virginia         0.364      5 14.000000  0.357      3     32
-	3/23/2024  Holy Cross            0.421      3 9.000000  0.333     10     27
-	3/10/2024  Nebraska              0.414      5 17.000000  0.294     12     34
+
+			Caitlin Clark Statistics - March Madness 2024
+
+	      Date                  Opp      FG%       3P      3PA      3P%      AST      PTS
+	  4/1/2024      Louisiana State    0.448        9       20    0.450       12       41
+	 3/30/2024             Colorado    0.591        3       11    0.273       15       29
+	 3/25/2024        West Virginia    0.364        5       14    0.357        3       32
+	 3/23/2024           Holy Cross    0.421        3        9    0.333       10       27
+	 3/10/2024             Nebraska    0.414        5       17    0.294       12       34

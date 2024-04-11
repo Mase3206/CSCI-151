@@ -12,69 +12,65 @@
 # Book Excercise ?????
 # =============================================================================
 
+import stdarray
 from instream import InStream
 from outstream import OutStream
-import stdarray
-from datetime import datetime as DateTime
 
 
 
-
-def writeHeader():
-	header = f"""
-		Caitlin Clark Statistics - March Madness 2024
-
-	{'Date':10s} {'Opp':20s} {'FG%':6s} {'3P':6s} {'3PA':6s} {'3P%':6.3s} {'AST':6s} {'PTS':6s}"""
-	return header
-
-
-
-class Game:
+def writeHeader() -> str:
 	"""
-	Holds some stats about a specific player's performance from a specific basketball game.
+	It writes the header. 
+	
+	In case you were wondering, this is a pretty common function I implement in my programs, as it can allow for a dynamic header via function arguments. I'm not taking any arguments with this one, so it's just force of habit
 	"""
+	return f"""
+			Caitlin Clark Statistics - March Madness 2024
 
-	def __init__(self, gameData: dict[str, str | float | int]):
-		self.date = str(gameData['Date'])
-		self.opponent = str(gameData['Opp'])
-		self.percent_FG = float(gameData['FG%'])
-		self.count_3P = int(gameData['3P'])
-		self.count_3PA = int(gameData['3PA'])
-		self.percent_3P = float(gameData['3P%'])
-		self.assists = int(gameData['AST'])
-		self.points = int(gameData['PTS'])
-
-
-	def formatLine(self) -> str:
-		# return "%10s %20s %6.3f %6d %6d %6.3f %6d %6d"
-		return f'\t{self.date:10s} {self.opponent:20s} {self.percent_FG:6.3f} {self.count_3P:6d} {self.count_3PA:6f} {self.percent_3P:6.3f} {self.assists:6d} {self.points:6d}'
+	{'Date':>10s} {'Opp':>20s} {'FG%':>8s} {'3P':>8s} {'3PA':>8s} {'3P%':>8s} {'AST':>8s} {'PTS':>8s}"""
 
 
 
-def extractData(csvLine: str) -> Game:
-	a = csvLine.split(',')
+def extractData(csvLine: str, delimter=',') -> str:
+	"""
+	Takes a CSV line and returns a string with the formatted data
+
+	Arguments
+	---------
+		csvLine (str): one line from a CSV file
+		delimiter (kwarg, str): the value delimiter used in the CSV file; defaults to a comma
+	
+	Returns
+	-------
+		the game data in a nice, formatted string
+	"""
+	a = csvLine.split(delimter)
+
+	# throw the data into a dict to make returning the formatted string easier
 	data = {
-		'Date': a[0],
-		'Opp': a[2],
-		'FG%': a[7],
-		'3P': a[11],
-		'3PA': a[12],
-		'3P%': a[13],
-		'AST': a[20],
-		'PTS': a[25]
+		'Date': str(a[0]),
+		'Opp': str(a[2]),
+		'FG%': float(a[7]),
+		'3P': int(a[11]),
+		'3PA': int(a[12]),
+		'3P%': float(a[13]),
+		'AST': int(a[20]),
+		'PTS': int(a[25])
 	}
-	return Game(data)
+
+	# return the data in a formatted string by unpacking the dict
+	return "\t{Date:>10s} {Opp:>20s} {FG%:8.3f} {3P:8d} {3PA:8d} {3P%:8.3f} {AST:8d} {PTS:8d}".format(**data)
 
 
 
-def main(filename:str):
+def main(filename: str):
 	data = InStream(filename)
 	lineList: list[str] = data.readAllLines()[1:]
 
-	output = OutStream() #('offense.txt')
+	output = OutStream('offense.txt')
 	output.writeln(writeHeader())
 	for line in lineList:
-		output.writeln(extractData(line).formatLine())
+		output.writeln(extractData(line))
 
 
 
