@@ -3,7 +3,7 @@
 # =============================================================================
 # sportsfilter.py
 #
-# asdfadsf
+# Takes some March Madness game data of a player and formats it all pretty.
 #
 # Noah S. Roberts
 # 04.10.2024
