@@ -1,0 +1,32 @@
+# configure which columns to pull data from, what their name is, and what order they should be re-formatted in
+- csvColumn: 0
+  name: Date
+  order: 0
+
+- csvColumn: 2
+  name: Opp
+  order: 1
+
+- csvColumn: 7
+  name: "FG%"
+  order: 2
+
+- csvColumn: 11
+  name: 3P
+  order: 3
+
+- csvColumn: 12
+  name: 3PA
+  order: 4
+
+- csvColumn: 13
+  name: "3P%"
+  order: 5
+
+- csvColumn: 20
+  name: AST
+  order: 6
+
+- csvColumn: 25
+  name: PTS
+  order: 7
