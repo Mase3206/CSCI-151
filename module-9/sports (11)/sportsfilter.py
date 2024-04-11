@@ -63,11 +63,15 @@ def extractData(csvLine: str, delimter=',') -> str:
 
 
 
-def main(filename: str):
+def main(filename: str, stdout=False):
 	data = InStream(filename)
 	lineList: list[str] = data.readAllLines()[1:]
 
-	output = OutStream('offense.txt')
+	if stdout:
+		output = OutStream()
+	else:
+		output = OutStream('offense.txt')
+
 	output.writeln(writeHeader())
 	for line in lineList:
 		output.writeln(extractData(line))
@@ -75,5 +79,79 @@ def main(filename: str):
 
 
 if __name__ == '__main__':
-	import sys
-	main(sys.argv[1])
+	import sys, stdio
+
+
+	# let's implement a full-on, multi-option CLI
+	# because why not
+	helpText = """sportsfilter.py [-h] [--stdout] csv_file_name
+	
+Options:
+	-h		Display this help page
+	--stdout	Send formatted output to file as well as to stdout
+"""
+
+	# no arguments given
+	if len(sys.argv) == 1:
+		stdio.writeln('Required arguments: csv_file_name')
+		exit(1)
+
+
+	# `-h` is used anywhere, regardless of where or how many arguments are
+	# passed
+	if '-h' in sys.argv[1:]:
+		stdio.writeln(helpText)
+		exit(0)
+
+
+	# just file name is given
+	if len(sys.argv) == 2:
+		main(sys.argv[1])
+
+	# `--stdout` is passed
+	else:
+		if sys.argv[1] == '--stdout':
+			# first write to file
+			main(sys.argv[2])
+
+			# then write to stdout
+			main(sys.argv[2], stdout=True)
+
+			exit(0)
+		
+		# if `--stdout` passed after file name
+		elif sys.argv[2] == '--stdout':
+			# first write to file
+			main(sys.argv[1])
+
+			# then write to stdout
+			main(sys.argv[1], stdout=True)
+
+			exit(0)
+
+
+# =============================================================================
+# EXAMPLE USAGE
+# -----------------------------------------------------------------------------
+# 
+# $ python sportsfilter.py -h
+#	sportsfilter.py [-h] [--stdout] csv_file_name
+#
+#	Options:
+#	        -h              Display this help page
+#	        --stdout        Send formatted output to file as well as to stdout
+#
+# $ python sportsfilter.py clark.csv
+#	[all output went to offense.txt]
+#
+# $ python sportsfilter.py --stdout clark.csv
+#	[output goes to offense.txt AND stdout]
+#
+#
+# -----------------------------------------------------------------------------
+# EXTRA NOTES
+# -----------------------------------------------------------------------------
+#
+# 1. 
+#
+# =============================================================================
