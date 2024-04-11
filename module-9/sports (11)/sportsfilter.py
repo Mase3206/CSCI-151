@@ -64,14 +64,17 @@ def extractData(csvLine: str, delimter=',') -> str:
 
 
 def main(filename: str, stdout=False):
+	# get data
 	data = InStream(filename)
 	lineList: list[str] = data.readAllLines()[1:]
 
+	# initialize OutStream
 	if stdout:
 		output = OutStream()
 	else:
 		output = OutStream('offense.txt')
 
+	# write header, then each line of data
 	output.writeln(writeHeader())
 	for line in lineList:
 		output.writeln(extractData(line))
