@@ -12,9 +12,11 @@
 # =============================================================================
 
 
-from __future__ import annotations  # allows type annotations in method definition within the same class; see BankAccount.transfer() on line 136
-import stdio, stdarray
+from __future__ import \
+    annotations  # allows type annotations in method definition within the same class; see BankAccount.transfer() on line 136
 
+import stdarray
+import stdio
 
 
 class Name:
@@ -274,7 +276,6 @@ def _tc():
 
 if __name__ == '__main__':
 	_tc()
-
 
 
 # =============================================================================
