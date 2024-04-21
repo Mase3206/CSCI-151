@@ -13,7 +13,7 @@
 
 
 from __future__ import annotations  # allows type annotations in method definition within the same class; see BankAccount.transfer() on line 136
-import stdio
+import stdio, stdarray
 
 
 
@@ -51,6 +51,10 @@ class Name:
 	# special methods
 	def __str__(self):
 		return self.fullName()
+	
+
+	def __repr__(self):
+		return f'Name(first={self.first} last={self.last} _middle={self._middle})'
 
 
 
@@ -106,6 +110,7 @@ class BankAccount:
 		else:
 			self._balance += amount
 			if quiet != True:
+				stdio.writef('Successful deposit of $%.2f.\n', amount)
 				stdio.writeln(self)
 			return self._balance
 	
@@ -129,6 +134,7 @@ class BankAccount:
 		else:
 			self._balance -= amount
 			if quiet != True:
+				stdio.writef('Successful withdrawal of $%.2f.\n', amount)
 				stdio.writeln(self)
 			return self._balance
 	
@@ -167,8 +173,38 @@ class BankAccount:
 	
 	# special methods
 	def __str__(self):
-		return f'Acct. number: {self.account_number}, Acct. holder: {self.account_holder()}, Balance: {self.balance():.2f}'
+		return f'Acct. number: {self.account_number:<6d} Acct. holder: {self.account_holder():23s} Balance: {self.balance():.2f}'
+	
 
+	def __repr__(self):
+		return f'BankAccount(account_number={self.account_number} _acctHolder={repr(self._acctHolder)} _balance={self._balance})'
+
+
+
+# test client stuff
+def _tcsection(text: str):
+	"""
+	Test client output section. Has a two-line gap above. Format example:
+	```
+————————————————————————————————————
+ * Printing final account details * 
+————————————————————————————————————
+	```
+	"""
+	bar = ''.join(stdarray.create1D(len(text) + 6, '—'))
+	return f'\n\n{bar}\n * {text} * \n{bar}'
+
+
+def _tcsubsection(text: str):
+	"""
+	Test client output sub-section. Has a one-line gap above. Format example:
+	```
+ * Testing valid transfer * 
+————————————————————————————
+	```
+	"""
+	bar = ''.join(stdarray.create1D(len(text) + 6, '—'))
+	return f'\n * {text} * \n{bar}'
 
 
 def _tc():
@@ -176,62 +212,64 @@ def _tc():
 	Test client. Not part of the API, so don't use it!
 	"""
 
-	stdio.writeln('NOTE: all lines surrounded by asterisks are output by this test client.')
+	stdio.writeln('NOTE: Output from test client will have an asterisk on each end and either bars above and/or below each line.')
 
 
 	# creation
-	stdio.writeln('\n * Creating a new account for Alice Eckert * ')
+	stdio.writeln(_tcsection('Creating new accounts for testing'))
 	a = BankAccount(
 		297,
 		Name('Alice', 'Eckert'),
 		balance=1000.00
 	)
-
-	stdio.writeln('\n * Creating a new account for Bob J. Smith * ')
 	b = BankAccount(
 		4971,
 		Name('Bob', 'Smith', middle='J'),
 		balance=500
 	)
-
-	stdio.writeln('\n * Creating a new account for Carl Wattson Zenith * ')
 	c = BankAccount(
 		23,
-		Name('Carl', 'Zenith', middle='Wattson'),
+		Name('Kurop', 'Чunjał', middle='Šne'),
 		balance=120954686
 	)
 
 
 	# deposit
-	stdio.writeln('\n\n * Testing invalid deposits * ')
+	stdio.writeln(_tcsection('Testing invalid deposits'))
 	a.deposit(-2374.23456234862)
-	a.deposit('this is not a float')
+	b.deposit('this is not a float')
 
-	stdio.writeln('\n * Testing valid deposit * ')
-	b.deposit(700)
+	stdio.writeln(_tcsubsection('Testing valid deposit'))
+	a.deposit(784.32)
 
 
 	# withdrawal
-	stdio.writeln('\n\n * Testing invalid withdrawals * ')
-	c.withdraw(-125234)
-	a.withdraw(268347962)
+	stdio.writeln(_tcsection('Testing invalid withdrawals'))
+	c.withdraw(-125234.64)
+	a.withdraw(268347962.43)
 	a.withdraw('this is not a float')
 
-	stdio.writeln('\n * Testing valid withdrawal * ')
-	b.withdraw(2)
+	stdio.writeln(_tcsubsection('Testing valid withdrawal'))
+	b.withdraw(2.17)
 
 
 	# transfer
-	stdio.writeln('\n\n * Testing invalid transfers * ')
-	c.transfer(a, -2498234)
-	a.transfer(b, 283472)
+	stdio.writeln(_tcsection('Testing invalid transfers'))
+	c.transfer(a, -2498234.53)
+	a.transfer(b, 283472.56)
 	b.transfer(c, 'this is not a float')
 
-	stdio.writeln('\n * Testing valid transfer * ')
-	c.transfer(b, 14000)
+	stdio.writeln(_tcsubsection('Testing valid transfer'))
+	c.transfer(b, 32621.14)
 
-	stdio.writeln('End test client.')
+	
+	# final account details
+	stdio.writeln(_tcsection('Printing final account details'))
+	stdio.writef('%s\n', a)
+	stdio.writef('%s\n', b)
+	stdio.writef('%s\n', c)
 
+	stdio.writeln(_tcsection('End test client.'))
 
 
 if __name__ == '__main__':
