@@ -11,14 +11,10 @@
 # for Module 11
 # =============================================================================
 
-# Card(suit, face, value)	# Create a card
-# c.get_value()			# Returns an integer indicating value of card
-# c.set_value(v)			# Sets the value of card to v
-# str(c)					# Example:  Two of Hearts
-
-
 import stdarray
 
+
+suits = stdarray.create1D(4, '')
 suits = [
 	'Hearts', 
 	'Spades', 
@@ -26,6 +22,7 @@ suits = [
 	'Clubs'
 ]
 
+strValues = stdarray.create1D(13, '')
 strValues = [
 	'Ace',
 	'Two',
@@ -41,6 +38,7 @@ strValues = [
 	'Queen',
 	'King'
 ]
+
 
 
 class Card:
@@ -118,10 +116,12 @@ class Card:
 		return f'Card(suit={self.suit} _face={self._face} _value={self._value})'
 	
 
+
 def _tc():
 	a = Card('Spades', value=1)
 	print(a)
 	print(repr(a))
+
 
 if __name__ == '__main__':
 	_tc()
