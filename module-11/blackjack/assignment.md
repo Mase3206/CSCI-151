@@ -91,7 +91,7 @@ p.win(amount)			# Adds amount to player’s balance
 p.blackjack_hand_value()	# Returns value of blackjack hand
 p.blackjack()			# Returns True if hand is a blackjack
 ```
-s
+
 
 ## Programming Concepts
 
