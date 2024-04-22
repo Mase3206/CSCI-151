@@ -44,13 +44,13 @@ strValues = [
 
 
 class Card:
-	def __init__(self, suit: str, face='', value=0):
+	def __init__(self, suit: str, value: int):
 		if suit in suits:
 			self.suit = suit.title()
 		else:
 			raise ValueError(f'{suit} is not a valid suit name. Valid suits are {suits}.')
 		
-		self.set_value(face=face.title(), value=value)
+		self.set_value(value)
 
 
 	def _from_face(self, faceValue: str) -> int:
@@ -67,22 +67,10 @@ class Card:
 		return self._value
 	
 
-	def set_value(self, face='', value=0):
+	def set_value(self, value: int) -> None:
 		if value in range(1, 14):
-			# if the string-type face value (i.e. 'One') is given
-			if face != '' and value == 0:
-				self._face = face
-				self.set_value(self._from_face(face))
-			
-			# if the int-type value (i.e. `4`) is given
-			elif value != 0 and face == '':
-				self._face = self._from_numerical(value)
-				self._value = value
-			
-			# if neither value is given
-			else:
-				self._face = ''
-				self._value = 0
+			self._face = self._from_numerical(value)
+			self._value = value
 		else:
 			raise ValueError('Given value is not a valid card.')
 		
