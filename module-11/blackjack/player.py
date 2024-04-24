@@ -25,10 +25,14 @@
 
 import stdio, stdarray
 from card import Card
-from deck import Deck
+from deck import Deck, initialize_empty_deck
 
 
-# borrowed from previous assignment
+# make an alias to avoid unnecessary calls to deck.py
+initialize_empty_hand = initialize_empty_deck
+
+
+# borrowed from a previous assignment
 class Name:
 	"""
 	Name object
@@ -73,12 +77,7 @@ class Player:
 	def __init__(self, name: Name, balance: int):
 		self.name = name
 		self._balance = balance
-		self._hand = self._initialize_empty_hand()
-
-	
-	def _initialize_empty_hand(self) -> list[Card]:
-		# the initialized Card object in this line helps with PyLance's type annotations
-		return stdarray.create1D(0, Card('Hearts', 1))
+		self._hand = initialize_empty_hand()
 
 
 	def print_hand(self) -> None:
@@ -109,7 +108,7 @@ class Player:
 		"""
 		# make sure _hand is good and gone before re-creating it
 		del self._hand
-		self._hand = self._initialize_empty_hand()
+		self._hand = initialize_empty_hand()
 
 
 	def deal_card(self, deck: Deck) -> None:
@@ -170,7 +169,7 @@ class Player:
 				index 2: hand value if all Aces = 11
 		"""
 		values = [v.get_value() for v in self._hand]
-		values_withHighAces = values
+		values_withHighAces = values[:]
 
 		for i in range(len(values)):
 			if values[i] == 1:
@@ -203,7 +202,13 @@ def _tc():
 	p.deal_card(testDeck)
 	p.deal_card(testDeck)
 	p.print_hand()
-	p.clear()
+
+	# manually add an Ace to check low/high card value func
+	p._hand.append(Card('Spades', 'Ace'))
+	# p.clear()
+	p.print_hand()
+	print(p.hand_value())
+	print(p.is_blackjack())
 	
 
 if __name__ == '__main__':

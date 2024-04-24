@@ -23,17 +23,21 @@ import random
 import stdio
 
 
+def initialize_empty_deck() -> list[Card]:
+	# the initialized Card object in this line helps with PyLance's type annotations
+	return stdarray.create1D(0, Card('Hearts', 'Ace'))
+
+
 class Deck:
 	"""
 	A shuffled deck of 52 standard cards. Does not include the two Joker cards.
 	"""
 
 	def __init__(self):
-		# the initialized Card object in this line helps with PyLance's type annotations
-		self._deck: list[Card] = stdarray.create1D(0, Card('Hearts', 1))
+		self._deck = initialize_empty_deck()
 		for s in suits:
-			for v in range(1, 14):
-				self._deck += [Card(s, v)]
+			for f in faces.keys():
+				self._deck += [Card(s, f)]
 
 		# super shuffle!
 		random.shuffle(self._deck)
@@ -57,7 +61,7 @@ class Deck:
 		-------
 			(Card) randomly-selected card
 		"""
-		i_card = random.randint(1, len(self._deck))
+		i_card = random.randint(1, len(self._deck)-1)
 		value_card = self._deck[i_card]
 		self._deck.pop(i_card)
 		return value_card

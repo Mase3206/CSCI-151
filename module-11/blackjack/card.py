@@ -22,22 +22,21 @@ suits = [
 	'Clubs'
 ]
 
-faces = stdarray.create1D(14, '')
-faces = [
-	'Ace',
-	'Two',
-	'Three',
-	'Four',
-	'Five',
-	'Six',
-	'Seven',
-	'Eight', 
-	'Nine',
-	'Ten',
-	'Jack',
-	'Queen',
-	'King'
-]
+faces: dict[str, int] = {
+	'Ace': 1,
+	'Two': 2,
+	'Three': 3,
+	'Four': 4,
+	'Five': 5,
+	'Six': 6,
+	'Seven': 7,
+	'Eight': 8,
+	'Nine': 9,
+	'Ten': 10,
+	'Jack': 10,
+	'Queen': 10,
+	'King': 10
+}
 
 
 
@@ -51,16 +50,16 @@ class Card:
 		value (int): numerical representation of the card's value; i.e. 'Jack' = 11, 'Ace' = 1, or 'Three' = 3
 	"""
 
-	def __init__(self, suit: str, value: int):
+	def __init__(self, suit: str, face: str):
 		if suit in suits:
 			self.suit = suit.title()
 		else:
 			raise ValueError(f'{suit} is not a valid suit name. Valid suits are {suits}.')
 		
-		self.set_value(value)
+		self.set_value(face)
 			
 	
-	def _from_numerical(self, value: int) -> str:
+	def _from_face(self, face: str) -> int:
 		"""
 		Get str value from int value.
 
@@ -73,7 +72,7 @@ class Card:
 			(str) string representation of the card's value; i.e. 'Ace', 'Three', or 'Jack'
 		"""
 
-		return faces[value - 1]
+		return faces[face.title()]
 	
 	
 	def get_value(self) -> int:
@@ -88,7 +87,7 @@ class Card:
 		return self._value
 	
 
-	def set_value(self, value: int) -> None:
+	def set_value(self, face: str) -> None:
 		"""
 		Set both int and str values of card from given numerical representation of the card's value.
 
@@ -101,11 +100,11 @@ class Card:
 			None
 		"""
 
-		if value in range(1, 14):
-			self._face = self._from_numerical(value)
-			self._value = value
+		if face.title() in faces.keys():
+			self._face = face
+			self._value = self._from_face(face)
 		else:
-			raise ValueError('Given value is not a valid card.')
+			raise ValueError('Given face is not valid.')
 		
 	
 	# special methods
@@ -113,12 +112,12 @@ class Card:
 		return f'{self._face} of {self.suit}'
 	
 	def __repr__(self) -> str:
-		return f'Card(suit={self.suit} _face={self._face} _value={self._value})'
+		return f"Card(suit='{self.suit}' _face='{self._face}' _value={self._value})"
 	
 
 
 def _tc():
-	a = Card('Spades', value=1)
+	a = Card('Spades', 'King')
 	print(a)
 	print(repr(a))
 
