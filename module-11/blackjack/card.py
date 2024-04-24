@@ -22,8 +22,8 @@ suits = [
 	'Clubs'
 ]
 
-strValues = stdarray.create1D(13, '')
-strValues = [
+faces = stdarray.create1D(14, '')
+faces = [
 	'Ace',
 	'Two',
 	'Three',
@@ -73,7 +73,7 @@ class Card:
 			(str) string representation of the card's value; i.e. 'Ace', 'Three', or 'Jack'
 		"""
 
-		return strValues[value - 1]
+		return faces[value - 1]
 	
 	
 	def get_value(self) -> int:
