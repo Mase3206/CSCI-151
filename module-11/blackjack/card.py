@@ -51,7 +51,7 @@ class Card:
 	"""
 
 	def __init__(self, suit: str, face: str):
-		if suit in suits:
+		if suit.title() in suits:
 			self.suit = suit.title()
 		else:
 			raise ValueError(f'{suit} is not a valid suit name. Valid suits are {suits}.')
@@ -72,7 +72,8 @@ class Card:
 			(int) numerical representation of the card's value; i.e. 1, 3, or 10
 		"""
 
-		return faces[face.title()]
+		# grab the value associated with the face
+		return faces[face]
 	
 	
 	def get_value(self) -> int:
@@ -105,8 +106,8 @@ class Card:
 		"""
 
 		if face.title() in faces.keys():
-			self._face = face
-			self._value = self._from_face(face)
+			self._face = face.title()
+			self._value = self._from_face(face.title())
 		else:
 			raise ValueError('Given face is not valid.')
 		

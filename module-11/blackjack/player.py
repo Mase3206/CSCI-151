@@ -182,15 +182,17 @@ class Player:
 
 	def is_blackjack(self) -> bool:
 		"""
-		Checks if the player's current hand is a blackjack (21).
+		Checks if the player's current hand is a natural Blackjack (two Aces).
 
 		Returns
 		-------
-			(bool) True if 21 in `hand_value()` else False
+			(bool) True if player has two Aces, else False
 		"""
 
-		count_aces = 0
-		
+		# count the number of Aces in the player's hand
+		count_aces = len([f for c in self._hand if (f := c.get_face()) == 'Ace'])
+		return True if count_aces == 2 else False
+
 		
 	
 	def __repr__(self) -> str:
@@ -212,6 +214,12 @@ def _tc():
 	print(p.hand_value())
 	print(p.is_blackjack())
 	print(repr(p))
+
+	p.clear()
+	p._hand.append(Card('clubs', 'ace'))
+	p._hand.append(Card('diAmondS', 'aCe'))
+	print(p.hand_value())
+	print(p.is_blackjack())
 	
 
 if __name__ == '__main__':
