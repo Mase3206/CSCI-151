@@ -112,7 +112,7 @@ class Card:
 		return f'{self._face} of {self.suit}'
 	
 	def __repr__(self) -> str:
-		return f"Card(suit='{self.suit}' _face='{self._face}' _value={self._value})"
+		return f"Card(suit='{self.suit}', _face='{self._face}', _value={self._value})"
 	
 
 

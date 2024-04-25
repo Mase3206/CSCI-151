@@ -70,7 +70,7 @@ class Name:
 	
 
 	def __repr__(self):
-		return f'Name(first={self.first} last={self.last} _middle={self._middle})'
+		return f'Name(first={self.first}, last={self.last}, _middle={self._middle})'
 	
 
 class Player:
@@ -193,6 +193,10 @@ class Player:
 			return True
 		else:
 			return False
+		
+	
+	def __repr__(self) -> str:
+		return f"Player(name={self.name}, _balance={self._balance}, _hand={self._hand})"
 
 
 
@@ -209,6 +213,7 @@ def _tc():
 	p.print_hand()
 	print(p.hand_value())
 	print(p.is_blackjack())
+	print(repr(p))
 	
 
 if __name__ == '__main__':

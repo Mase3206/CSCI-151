@@ -76,6 +76,10 @@ class Deck:
 			(int) current length of the deck
 		"""
 		return len(self._deck)
+	
+
+	def __repr__(self) -> str:
+		return f"Deck(_deck={self._deck})"
 
 
 
@@ -85,6 +89,7 @@ def _tc():
 	print(d.size())
 	print(d.deal_card())
 	print(d.size())
+	print(repr(d))
 
 
 if __name__ == '__main__':
