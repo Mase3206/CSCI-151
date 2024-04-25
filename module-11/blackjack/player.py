@@ -189,10 +189,8 @@ class Player:
 			(bool) True if 21 in `hand_value()` else False
 		"""
 
-		if 21 in self.hand_value():
-			return True
-		else:
-			return False
+		count_aces = 0
+		
 		
 	
 	def __repr__(self) -> str:

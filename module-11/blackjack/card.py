@@ -47,7 +47,7 @@ class Card:
 	Arguments
 	---------
 		suit (str): suit of the card. Must be plural; i.e. 'Hearts"
-		value (int): numerical representation of the card's value; i.e. 'Jack' = 11, 'Ace' = 1, or 'Three' = 3
+		face (str): face of the card
 	"""
 
 	def __init__(self, suit: str, face: str):
@@ -65,11 +65,11 @@ class Card:
 
 		Arguments
 		---------
-			value (int): numerical representation of the card's value; i.e. 1, 3, or 11
+			face (str): string representation of the card's value; i.e. 'Ace', 'Three', or 'Jack' 
 
 		Returns
 		-------
-			(str) string representation of the card's value; i.e. 'Ace', 'Three', or 'Jack'
+			(int) numerical representation of the card's value; i.e. 1, 3, or 10
 		"""
 
 		return faces[face.title()]
@@ -81,10 +81,14 @@ class Card:
 
 		Returns
 		-------
-			(int) numerical representation of the card's value; i.e. 1, 3, or 11
+			(int) numerical representation of the card's value; i.e. 1, 3, or 10
 		"""
 
 		return self._value
+	
+
+	def get_face(self) -> str:
+		return self._face
 	
 
 	def set_value(self, face: str) -> None:
@@ -93,7 +97,7 @@ class Card:
 
 		Arguments
 		---------
-			value (int): numerical representation of the card's value; i.e. 1, 3, or 11
+			face (str): string representation of the card's value; i.e. 'Ace', 'Three', or 'Jack' 
 
 		Returns
 		-------
