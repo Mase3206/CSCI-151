@@ -158,27 +158,55 @@ class Player:
 		"""
 
 
-	def hand_value(self) -> tuple[int, int]:
+	def hand_values(self) -> tuple[int, int]:
 		"""
-		Returns the current value of the hand in a tuple containing both hand values with low or high Aces, respectively. For the high Aces, all Aces are treated as 11s, regardless of how many are present.
+		Returns all possible current value(s) of the hand in an array of length 2^(count_aces).
 
 		Returns
 		-------
-			(tuple[int, int]): 
-				index 1: hand value if all Aces = 1
-				index 2: hand value if all Aces = 11
+			(list[int]) all possible value(s) of the hand
 		"""
-		values = [v.get_value() for v in self._hand]
-		values_withHighAces = values[:]
 
-		for i in range(len(values)):
-			if values[i] == 1:
-				values_withHighAces[i] = 11
+		# grab the face names
+		faces = [c.get_face() for c in self._hand]
 
-		retTup: tuple[int, int] = stdarray.create1D(2, 0)
-		retTup = (sum(values), sum(values_withHighAces))
-		return retTup
-	
+		# calculate the total value of all cards that *are not* aces
+		total_no_aces = sum([c.get_value() for c in self._hand if c.get_face() != 'Ace'])
+
+		# count only the number of aces in the hand
+		count_aces = len([f for f in faces if f == 'Ace'])
+
+		possible_values: list[int] = stdarray.create1D(2^(count_aces), total_no_aces)
+
+
+		# just hard-code it
+		if count_aces == 0:
+			# the total_no_aces is already in there, so just return it
+			return possible_values
+		
+		elif count_aces == 1:
+			possible_values = [
+				total_no_aces + 1,
+				total_no_aces + 11
+			]
+			return possible_values
+		
+		elif count_aces == 2:
+			possible_values = [
+				total_no_aces + 2,
+				total_no_aces + 12,
+				total_no_aces + 12,
+				total_no_aces + 22
+			]
+			return possible_values
+		
+		elif count_aces > 2:
+			raise NotImplementedError('AAH! Player has more than 2 aces! I don\'t know what to do with that yet!')
+		
+		else:
+			# TODO: this error is... well, it can't be in the final code.
+			raise Exception('Something done got fucky.')
+
 
 	def is_blackjack(self) -> bool:
 		"""
@@ -193,7 +221,6 @@ class Player:
 		count_aces = len([f for c in self._hand if (f := c.get_face()) == 'Ace'])
 		return True if count_aces == 2 else False
 
-		
 	
 	def __repr__(self) -> str:
 		return f"Player(name={self.name}, _balance={self._balance}, _hand={self._hand})"
@@ -211,14 +238,14 @@ def _tc():
 	p._hand.append(Card('Spades', 'Ace'))
 	# p.clear()
 	p.print_hand()
-	print(p.hand_value())
+	print(p.hand_values())
 	print(p.is_blackjack())
 	print(repr(p))
 
 	p.clear()
 	p._hand.append(Card('clubs', 'ace'))
 	p._hand.append(Card('diAmondS', 'aCe'))
-	print(p.hand_value())
+	print(p.hand_values())
 	print(p.is_blackjack())
 	
 
