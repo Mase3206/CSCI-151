@@ -30,7 +30,7 @@ def initialize_empty_deck() -> list[Card]:
 
 class Deck:
 	"""
-	A shuffled deck of 52 standard cards. Does not include the two Joker cards.
+	A shuffled deck of 52 standard cards. Does not include the two Joker cards. Depends on card.py.
 	"""
 
 	def __init__(self):

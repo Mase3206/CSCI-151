@@ -11,3 +11,18 @@
 # for Module 11
 # =============================================================================
 
+import stdio
+import sys
+from card import Card
+from deck import Deck
+from player import Player
+
+
+
+
+def _tc():
+	stdio.writeln('Success!')
+
+
+if __name__ == '__main__':
+	_tc()

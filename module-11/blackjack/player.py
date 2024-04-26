@@ -28,10 +28,6 @@ from card import Card
 from deck import Deck, initialize_empty_deck
 
 
-# make an alias to avoid unnecessary calls to deck.py
-initialize_empty_hand = initialize_empty_deck
-
-
 # borrowed from a previous assignment
 class Name:
 	"""
@@ -74,10 +70,19 @@ class Name:
 	
 
 class Player:
+	"""
+	Player class used for Blackjack. Depends on card.py and deck.py.
+
+	Arguments
+	---------
+		name (Name): player's name in a Name class (also defined in this file).
+		balance (int): player's starting balance.	
+	"""
 	def __init__(self, name: Name, balance: int):
 		self.name = name
 		self._balance = balance
-		self._hand = initialize_empty_hand()
+		# this says it initializes a deck, but it just creates a list of length 0 with type list[Card], which is used by both the player's hand and the deck.
+		self._hand = initialize_empty_deck()
 
 
 	def print_hand(self) -> None:
@@ -108,7 +113,7 @@ class Player:
 		"""
 		# make sure _hand is good and gone before re-creating it
 		del self._hand
-		self._hand = initialize_empty_hand()
+		self._hand = initialize_empty_deck()
 
 
 	def deal_card(self, deck: Deck) -> None:

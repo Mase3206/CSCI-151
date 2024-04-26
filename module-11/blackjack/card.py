@@ -42,7 +42,7 @@ faces: dict[str, int] = {
 
 class Card:
 	"""
-	Card object.
+	Card object for use in card games, like Blackjack.
 
 	Arguments
 	---------
