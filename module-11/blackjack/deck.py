@@ -67,29 +67,26 @@ class Deck:
 		return value_card
 	
 	
-	def size(self) -> int:
-		"""
-		Returns the current size of the deck.
-
-		Returns
-		-------
-			(int) current length of the deck
-		"""
+	# special methods
+	def __len__(self) -> int:
 		return len(self._deck)
 	
-
 	def __repr__(self) -> str:
-		return f"Deck(_deck={self._deck})"
+		return f"Deck({self._deck})"
+	
+	def __str__(self) -> str:
+		return f'This deck contains {len(self)} cards.'
 
 
 
 def _tc():
 	d = Deck()
 	# d._print_deck()
-	print(d.size())
+	print(len(d))
 	print(d.deal_card())
-	print(d.size())
+	# print(len(d))
 	print(repr(d))
+	print(str(d))
 
 
 if __name__ == '__main__':
