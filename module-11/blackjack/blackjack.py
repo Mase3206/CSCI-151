@@ -25,7 +25,7 @@ PLAYER_DATA_FILE = 'player.dat'
 
 
 
-def winCheck(player: Player, dealer: Player) -> bool:
+def winCheck(player: Player, dealer: Player) -> str:
 	"""
 	Check if player wins round by checking player and dealer hand values. 
 
@@ -59,8 +59,6 @@ def winCheck(player: Player, dealer: Player) -> bool:
 
 
 
-
-
 def round(player: Player, dealer: Player, deck: Deck):
 	"""
 	Single round. 
@@ -89,20 +87,46 @@ def round(player: Player, dealer: Player, deck: Deck):
 	choice = input('(1) stand, (2) call, or (q) quit? ')
 
 	if choice.lower() == 'q':
-		return 'user_exit'
-	elif choice == '1':
-		"stand"
-	elif choice == '2':
-		"call"
+		return 'quit'
 	
+	# stand
+	elif choice == '1':
+		while True:
+			if winCheck(player, dealer) == 'no winner':
+				# print(winCheck(player, dealer))
+				dealer.deal_card(deck)
+			else:
+				stdio.writef('\nWinner: %s\n', winCheck(player, dealer))
+				stdio.writef("Player's hand value: %s\nDealer's hand value: %s\n", player.hand_values(), dealer.hand_values())
+				player.clear()
+				dealer.clear()
+				return winCheck(player, dealer)
+
+	elif choice == '2':
+		return "call"
 
 
 
-def game():
+def game(player: Player, dealer: Player, deck: Deck):
 	"""
 	Main game loop.
 	"""
-	return
+
+	q = False
+	while not q:
+		stdio.writef("%s's balance: %i\n", player.name.first, player.balance())
+		pot = int(input('Bet amount: ')) * 2
+		player.bet(pot / 2)
+
+		o = round(player, dealer, deck)
+		if o == 'quit':
+			q = True
+		elif o == 'player':
+			player.win(int(pot * 1.0))
+		elif 0 == 'natural':
+			player.win(int(pot * 1.5))
+
+		
 
 
 
@@ -125,6 +149,8 @@ def loadPlayer():
 			if useExisting.lower() == 'y' or useExisting == '':
 				player = existingData
 				player.clear()
+			else:
+				exit(1)
 	
 	except FileNotFoundError:
 		# create new dat file
@@ -166,9 +192,13 @@ def main():
 	deck = Deck()
 	player = loadPlayer()
 	dealer = Player(Name('Francis', 'McDealson'), math.inf)
-
-	while True:
-		round(player, dealer, deck)
+	stdio.writeln()
+	
+	q = False
+	while not q:
+		o = game(player, dealer, deck)
+		if o == 'quit':
+			q = True
 
 
 
