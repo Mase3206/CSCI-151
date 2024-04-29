@@ -136,101 +136,96 @@ class Player:
 
 	def bet(self, amount: int) -> bool:
 		"""
-		Attempts to bet the specified amount.
-		
-		* If the player can afford the specified amount, the amount will be subtracted from the player's balance and will return True.
-		* If the player *cannot* afford the specified amount, the player's balance will not change and will return False.
+		Attempts to bet the specified amount. If the Player's balance is not enough for the bet, they will automatically bet their entire balance (all in).
 
 		Arguments
 		---------
 			amount (int): attempted bet amount
-
-		Returns
-		-------
-			(bool) True if `_balance` >= `amount`, False if otherwise
 		"""
 
-		if amount >= self._balance:
-			self._balance -= amount
-			return True
-		else:
-			return False
+		attempt = self._balance - amount
+		self._balance = max(attempt, 0)
 		
-
-	def win(self, pot: int):
+		
+	def win(self, winnings: int):
 		"""
 		Adds specified pot value to player's balance for when they win.
 
 		Arguments
 		---------
-			pot (int): value of the pot
+			winnings (int): value of the winnings. This is either 100% (win) or 150% (natural blackjack) the value of the pot.
 		"""
 
-		self._balance += pot
+		self._balance += winnings
 
 
-	def hand_values(self) -> list[int]:
+	def best_hand_value(self) -> int:
 		"""
-		Returns all possible current value(s) of the hand in an array of length 2^(count_aces).
+		Returns the best value of the hand. It will try to find the highest possible value, accounting for all Aces, reverting to lower values if one or more Aces is present.
 
 		Returns
 		-------
-			(list[int]) all possible value(s) of the hand
+			(int) best total value of the hand
 		"""
 
-		# grab the face names
-		faces = [c.get_face() for c in self._hand]
+		# count the number of aces in the hand
+		qty_aces = len([c.face for c in self._hand if c.face == 'Ace'])
 
-		# calculate the total value of all cards that *are not* aces
-		total_no_aces = sum([c.get_value() for c in self._hand if c.get_face() != 'Ace'])
+		# get the total of the hand without Aces (even if none are present)
+		total_no_aces = sum([c.value for c in self._hand if c.face != 'Ace'])
 
-		# count only the number of aces in the hand
-		count_aces = len([f for f in faces if f == 'Ace'])
-
-		possible_values: list[int] = stdarray.create1D(2 ** (count_aces), total_no_aces)
-
-
-		# just hard-code it
-		if count_aces == 0:
-			# the total_no_aces is already in there, so just return it
-			return possible_values
+		if qty_aces == 0:
+			return total_no_aces
 		
-		elif count_aces == 1:
-			possible_values = [
+		elif self.is_blackjack():
+			return 21
+
+		elif qty_aces == 1:
+			a = stdarray.create1D(2, 0)
+			a = [
 				total_no_aces + 1,
 				total_no_aces + 11
 			]
-			return possible_values
+
+			for v in a:
+				if v >= 21:
+					a.remove(v)
+			
+			return max(a)
 		
-		elif count_aces == 2:
-			possible_values = [
+		elif qty_aces == 2:
+			a = stdarray.create1D(3, 0)
+			a = [
 				total_no_aces + 2,
-				total_no_aces + 12,
 				total_no_aces + 12,
 				total_no_aces + 22
 			]
-			return possible_values
-		
-		elif count_aces > 2:
-			raise NotImplementedError('AAH! Player has more than 2 aces! I don\'t know what to do with that yet!')
+
+			for v in a:
+				if v >= 21:
+					a.remove(v)
+			
+			return max(a)
 		
 		else:
-			# TODO: this error is... well, it can't be in the final code.
-			raise Exception('Something done got fucky.')
+			raise NotImplementedError('I haven\'t written the code to deal with 3 or more Aces in a hand.')
 
 
 	def is_blackjack(self) -> bool:
 		"""
-		Checks if the player's current hand is a natural Blackjack (two Aces).
+		Checks if the player's current hand is a natural Blackjack: first two cards are an Ace and a 10.
 
 		Returns
 		-------
-			(bool) True if player has two Aces, else False
+			(bool)
 		"""
 
-		# count the number of Aces in the player's hand
-		count_aces = len([f for c in self._hand if (f := c.get_face()) == 'Ace'])
-		return True if count_aces == 2 else False		
+		if self._hand[0].face == 'Ace' and self._hand[1].face == 'Ten':
+			return True
+		elif self._hand[0].face == 'Ten' and self._hand[1].face == 'Ace':
+			return True
+		else:
+			return False
 
 
 	# special methods
