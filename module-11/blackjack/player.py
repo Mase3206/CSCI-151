@@ -104,6 +104,10 @@ class Player:
 		"""
 		Print the player's top card.
 		"""
+		if self.name.last == 'McDealson':
+			stdio.writef("Dealer's top card:\n")
+		else:
+			stdio.writef("%s's top card:\n", self.name.first)
 		stdio.writeln(self._hand[0])
 
 
@@ -162,7 +166,7 @@ class Player:
 			pot (int): value of the pot
 		"""
 
-		# TODO
+		self._balance += pot
 
 
 	def hand_values(self) -> list[int]:
@@ -183,7 +187,7 @@ class Player:
 		# count only the number of aces in the hand
 		count_aces = len([f for f in faces if f == 'Ace'])
 
-		possible_values: list[int] = stdarray.create1D(2^(count_aces), total_no_aces)
+		possible_values: list[int] = stdarray.create1D(2 ** (count_aces), total_no_aces)
 
 
 		# just hard-code it
