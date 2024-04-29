@@ -23,9 +23,18 @@
 # p.blackjack_hand_value()	# Returns value of blackjack hand
 # p.blackjack()				# Returns True if hand is a blackjack
 
-import stdio, stdarray	# type: ignore
+import stdio	# type: ignore
+import stdarray	# type: ignore
+
 from card import Card
 from deck import Deck, initialize_empty_deck
+
+import pickle
+
+
+# define saved player file name as a Rust-style constant
+PLAYER_DATA_FILE = 'player.dat'
+
 
 
 # borrowed from a previous assignment
@@ -134,17 +143,22 @@ class Player:
 		return self._balance
 	
 
-	def bet(self, amount: int) -> bool:
+	def bet(self) -> int:
 		"""
-		Attempts to bet the specified amount. If the Player's balance is not enough for the bet, they will automatically bet their entire balance (all in).
+		Prompts the Player to enter their bet, then attempts attempts to bet the entered amount. If the Player's balance is not enough for the bet, they will automatically bet their entire balance (all in).
 
-		Arguments
-		---------
-			amount (int): attempted bet amount
+		Returns
+		-------
+			(int) amount bet, or the all-in amount
 		"""
+		
+		stdio.writef("Current balance: %i\n", self.balance())
+		bet = input('Bet amount: ')
 
-		attempt = self._balance - amount
-		self._balance = max(attempt, 0)
+		attempt = max(self.balance() - bet, 0)
+		self._balance = attempt
+
+		return attempt
 		
 		
 	def win(self, winnings: int):
@@ -231,6 +245,42 @@ class Player:
 	# special methods
 	def __repr__(self) -> str:
 		return f"Player(name={self.name}, _balance={self._balance}, _hand={self._hand})"
+
+
+
+def load() -> Player:
+	try:
+		with open(PLAYER_DATA_FILE, 'rb') as f:
+			return pickle.load(f)
+
+	except FileNotFoundError:
+		stdio.writeln('Existing player data not found. Creating a new player...')
+		return Player(
+			name=Name(
+				input('First name: '),
+				input('Last name: ')
+			),
+			balance=1000
+		)
+	
+
+
+def save(player: Player, createIfNonexistent=False):
+	try:
+		# does it exist?
+		open(PLAYER_DATA_FILE, 'rb').close()
+
+		with open(PLAYER_DATA_FILE, 'wb') as f:
+			player.clear()
+			pickle.dump(player, f)
+			
+	except FileNotFoundError:
+		if createIfNonexistent:
+			open(PLAYER_DATA_FILE, 'wb').close()
+			
+			with open(PLAYER_DATA_FILE, 'wb') as f:
+				player.clear()
+				pickle.dump(player, f)
 
 
 
