@@ -61,8 +61,13 @@ class Deck:
 		-------
 			(Card) randomly-selected card
 		"""
-		i_card = random.randint(1, len(self._deck)-1)
-		value_card = self._deck[i_card]
+
+		i_card = random.randint(0, max(len(self._deck)-1, 1))
+		# i_card = 0
+		try:
+			value_card = self._deck[i_card]
+		except IndexError:
+			raise IndexError(f'Index {i_card} is not in self._deck (len={len(self._deck)}, max index={len(self._deck)-1})')
 		self._deck.pop(i_card)
 		return value_card
 	
