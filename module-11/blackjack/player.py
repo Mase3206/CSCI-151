@@ -237,23 +237,18 @@ class Player:
 def _tc():
 	testDeck = Deck()
 	p = Player(Name('Noah', 'Roberts'), 1000.0)
-	p.deal_card(testDeck)
-	p.deal_card(testDeck)
-	p.print_hand()
-
-	# manually add an Ace to check low/high card value func
+	p._hand.append(Card('Spades', 'Ten'))
 	p._hand.append(Card('Spades', 'Ace'))
-	# p.clear()
-	p.print_hand()
-	print(p.hand_values())
 	print(p.is_blackjack())
-	print(repr(p))
 
 	p.clear()
-	p._hand.append(Card('clubs', 'ace'))
-	p._hand.append(Card('diAmondS', 'aCe'))
-	print(p.hand_values())
+	p._hand.append(Card('Spades', 'Five'))
+	p._hand.append(Card('Spades', 'Ace'))
+	print(p.best_hand_value())
+
+	p._hand.append(Card('Spades', 'Ace'))
 	print(p.is_blackjack())
+	print(p.best_hand_value())
 	
 
 if __name__ == '__main__':
