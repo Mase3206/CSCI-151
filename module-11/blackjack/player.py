@@ -71,7 +71,7 @@ class Name:
 
 	# special methods
 	def __str__(self):
-		return self.fullName()
+		return self.first
 	
 
 	def __repr__(self):
@@ -99,9 +99,9 @@ class Player:
 		Print the player's entire hand.
 		"""
 		if len(self._hand) == 0:
-			stdio.writef("%s has no cards.\n", self.name.first)
+			stdio.writef("\n%s has no cards.\n", self.name)
 		else:
-			stdio.writef("%s's hand:\n", self.name.first)
+			stdio.writef("\n%s's hand:\n", self.name)
 			for i in range(len(self._hand)):
 				if i != len(self._hand) - 1:
 					stdio.writef("%s, ", self._hand[i])
@@ -109,15 +109,15 @@ class Player:
 					stdio.writef("%s\n", self._hand[i])
 
 
-	def print_first(self) -> None:
+	def print_first(self) -> Card:
 		"""
-		Print the player's top card.
+		Prints and returns the player's top card.
 		"""
 		if self.name.last == 'McDealson':
-			stdio.writef("Dealer's top card:\n")
+			stdio.writef("\nDealer's top card: %s\n", self._hand[0])
 		else:
-			stdio.writef("%s's top card:\n", self.name.first)
-		stdio.writeln(self._hand[0])
+			stdio.writef("\n%s's top card: %s\n", self.name, self._hand[0])
+		return self._hand[0]
 
 
 	def clear(self) -> None:
@@ -153,7 +153,7 @@ class Player:
 		"""
 		
 		stdio.writef("Current balance: %i\n", self.balance())
-		bet = input('Bet amount: ')
+		bet = int(input('Bet amount: '))
 
 		attempt = max(self.balance() - bet, 0)
 		self._balance = attempt
@@ -251,6 +251,7 @@ class Player:
 def load() -> Player:
 	try:
 		with open(PLAYER_DATA_FILE, 'rb') as f:
+			stdio.writeln('Found existing player data. Loading...\n')
 			return pickle.load(f)
 
 	except FileNotFoundError:

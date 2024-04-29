@@ -47,9 +47,44 @@ def initRoot() -> tuple[Deck, Player, Player]:
 
 
 
-def game(deck: Deck, player: Player, dealer: Player):
+def game(
+		deck: Deck, 
+		player: Player, 
+		dealer: Player
+	):
+	"""
+	Main gameloop.	
+	"""
+
 	player.clear()
 	dealer.clear()
 
 	# bet
-	player.bet()
+	pot = player.bet() * 2
+
+	# deal cards
+	player.deal_card(deck)
+	player.deal_card(deck)
+	dealer.deal_card(deck)
+	dealer.deal_card(deck)
+
+	player.print_hand()
+	stdio.writef('Best value: %i\n', player.best_hand_value())
+
+	dv = dealer.print_first().value
+	
+
+
+def round(
+		deck: Deck,
+		player: Player,
+		dealer: Player,
+		pot: int
+	):
+	"""
+	One round of Blackjack. In each round, the player can choose to Hit or Stand.
+	"""
+
+
+if __name__ == '__main__':
+	game(*initRoot())
