@@ -11,7 +11,7 @@
 # for Module 11
 # =============================================================================
 
-import stdarray
+import stdarray	# type: ignore
 
 
 suits = stdarray.create1D(4, '')

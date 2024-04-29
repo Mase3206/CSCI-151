@@ -23,7 +23,7 @@
 # p.blackjack_hand_value()	# Returns value of blackjack hand
 # p.blackjack()				# Returns True if hand is a blackjack
 
-import stdio, stdarray
+import stdio, stdarray	# type: ignore
 from card import Card
 from deck import Deck, initialize_empty_deck
 
@@ -162,8 +162,10 @@ class Player:
 			pot (int): value of the pot
 		"""
 
+		# TODO
 
-	def hand_values(self) -> tuple[int, int]:
+
+	def hand_values(self) -> list[int]:
 		"""
 		Returns all possible current value(s) of the hand in an array of length 2^(count_aces).
 
@@ -224,9 +226,10 @@ class Player:
 
 		# count the number of Aces in the player's hand
 		count_aces = len([f for c in self._hand if (f := c.get_face()) == 'Ace'])
-		return True if count_aces == 2 else False
+		return True if count_aces == 2 else False		
 
-	
+
+	# special methods
 	def __repr__(self) -> str:
 		return f"Player(name={self.name}, _balance={self._balance}, _hand={self._hand})"
 

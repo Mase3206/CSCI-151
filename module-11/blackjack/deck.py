@@ -18,9 +18,9 @@
 
 
 from card import Card, suits, faces
-import stdarray
+import stdarray	# type: ignore
 import random
-import stdio
+import stdio	# type: ignore
 
 
 def initialize_empty_deck() -> list[Card]:
