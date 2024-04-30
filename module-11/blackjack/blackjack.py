@@ -95,30 +95,37 @@ def game(
 
 	if player.is_blackjack():
 		# win: natural blackjack
-		player.win(pot * 1.5)
-		stdio.writef("%s wins with a natural Blackjack!\n", player.name)
+		player.win(int(pot * 1.5))
+		stdio.writef("\n%s wins with a natural Blackjack!\n", player.name)
+		return deck, player, dealer
 
 	elif p > 21:
 		# lose: player over 21
-		stdio.writef("%s loses from going over 21!\n", player.name)
+		stdio.writef("\n%s loses from going over 21!\n", player.name)
+		return deck, player, dealer
 
 	elif d > 21:
 		# win: dealer over 21
 		player.win(pot)
-		stdio.writef("%s wins from the dealer's hand going over 21!\n", player.name)
+		stdio.writef("\n%s wins from the dealer's hand going over 21!\n", player.name)
+		return deck, player, dealer
 
 	elif p > d:
 		# win: player greater than dealer
 		player.win(pot)
-		stdio.writef("%s wins with a hand less than 21 and greater than the dealer's!\n", player.name)
+		stdio.writef("\n%s wins with a hand less than 21 and greater than the dealer's!\n", player.name)
+		return deck, player, dealer
 
 	elif p < d:
 		# lose: player less than dealer
-		stdio.writef("%s loses with a hand less than 21 but less than the dealer's!\n", player.name)
+		stdio.writef("\n%s loses with a hand less than 21 but less than the dealer's!\n", player.name)
+		return deck, player, dealer
 
 	elif p == d:
 		# bust: player equal to dealer
-		stdio.writef("%s busts with a hand equal to the dealer's!\n", player.name)
+		stdio.writef("\n%s busts with a hand equal to the dealer's!\n", player.name)
+		player.win(pot // 2)
+		return deck, player, dealer
 
 	
 
@@ -163,12 +170,28 @@ def round(
 			return round(deck, player, dealer)
 
 
+def main():
+	deck, player, dealer = initRoot()
+
+	while True:
+		# we can initialize and start the game on one line by unpacking the output of initRoot()
+		deck, player, dealer = game(deck, player, dealer)
+
+		cont = input('\nWould you like to play another game? [Y/n] ').lower()
+		if cont == 'y' or cont == '':
+			continue
+		else:
+			save = input('Would you like to save your balance to be used later? This will create a `player.dat` file in your current directory. [Y/n] ').lower()
+			if save == 'y' or save == '':
+				stdio.writeln('Saving...')
+				playerSave(player)
+				exit(0)
+			else:
+				exit(0)
 
 
-# while True:
-
-
-
-
-# we can initialize and start the game on one line by unpacking the output of initRoot()
-game(*initRoot())
+try:
+	main()
+except KeyboardInterrupt:
+	stdio.writeln('\nForce quit!')
+	exit(1)

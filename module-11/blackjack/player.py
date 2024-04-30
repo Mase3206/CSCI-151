@@ -289,7 +289,7 @@ class Dealer(Player):
 
 	# special methods
 	def __repr__(self) -> str:
-		return f"Player(name={self.name}, _balance={self._balance}, _hand={self._hand})"
+		return f"Player(name={repr(self.name)}, _balance={self._balance}, _hand={self._hand})"
 	
 
 
@@ -313,7 +313,7 @@ def load() -> Player:
 	
 
 
-def save(player: Player, createIfNonexistent=False):
+def save(player: Player):
 	try:
 		# does it exist?
 		open(PLAYER_DATA_FILE, 'rb').close()
@@ -323,12 +323,11 @@ def save(player: Player, createIfNonexistent=False):
 			pickle.dump(player, f)
 			
 	except FileNotFoundError:
-		if createIfNonexistent:
-			open(PLAYER_DATA_FILE, 'wb').close()
-			
-			with open(PLAYER_DATA_FILE, 'wb') as f:
-				player.clear()
-				pickle.dump(player, f)
+		open(PLAYER_DATA_FILE, 'wb').close()
+		
+		with open(PLAYER_DATA_FILE, 'wb') as f:
+			player.clear()
+			pickle.dump(player, f)
 
 
 
