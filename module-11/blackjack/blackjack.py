@@ -28,7 +28,7 @@ from player import (
 
 
 
-def initRoot() -> tuple[Deck, Player, Player]:
+def initRoot() -> tuple[Deck, Player, Dealer]:
 	"""
 	Initializes the root of the program:
 	* Creates the deck
@@ -43,6 +43,19 @@ def initRoot() -> tuple[Deck, Player, Player]:
 	deck = Deck()
 	dealer = Dealer()
 	player = playerLoad()
+
+	return deck, player, dealer
+
+
+
+def reset(player: Player, dealer: Dealer) -> tuple[Deck, Player, Dealer]:
+	"""
+	Reset the deck, dealer's hand, and player's hand for the next game.
+	"""
+
+	deck = Deck()
+	dealer.clear()
+	player.clear()
 
 	return deck, player, dealer
 
@@ -74,18 +87,86 @@ def game(
 
 	dealer.print_first()
 	stdio.writef('Known value: %i', dealer.value_first())
+
+
+	deck, player, dealer = round(deck, player, dealer)
+	p = player.best_hand_value()
+	d = dealer.best_hand_value()
+
+	if player.is_blackjack():
+		# win: natural blackjack
+		player.win(pot * 1.5)
+		stdio.writef("%s wins with a natural Blackjack!\n", player.name)
+
+	elif p > 21:
+		# lose: player over 21
+		stdio.writef("%s loses from going over 21!\n", player.name)
+
+	elif d > 21:
+		# win: dealer over 21
+		player.win(pot)
+		stdio.writef("%s wins from the dealer's hand going over 21!\n", player.name)
+
+	elif p > d:
+		# win: player greater than dealer
+		player.win(pot)
+		stdio.writef("%s wins with a hand less than 21 and greater than the dealer's!\n", player.name)
+
+	elif p < d:
+		# lose: player less than dealer
+		stdio.writef("%s loses with a hand less than 21 but less than the dealer's!\n", player.name)
+
+	elif p == d:
+		# bust: player equal to dealer
+		stdio.writef("%s busts with a hand equal to the dealer's!\n", player.name)
+
+	
+
+
 	
 
 
 def round(
 		deck: Deck,
 		player: Player,
-		dealer: Dealer,
-		pot: int
+		dealer: Dealer
 	):
 	"""
 	One round of Blackjack. In each round, the player can choose to Hit or Stand.
 	"""
+
+
+	choice = input("\n(h) Hit or (s) Stand? ")
+	# stand
+	if choice.lower() == 's':
+		while True:
+			if dealer.best_hand_value() > 17:
+				break
+			dealer.deal_card(deck)
+		return deck, player, dealer
+
+	# hit
+	elif choice.lower() == 'h':
+		player.deal_card(deck)
+		player.print_hand()
+		hv = player.best_hand_value()
+		# if player's hand value is over 21
+		if hv > 21:
+			return deck, player, dealer
+		else:
+			stdio.writef('Best value with new card: %i\n', hv)
+
+			dealer.print_first()
+			stdio.writef('Known value: %i', dealer.value_first())
+
+			# it's all done recursively
+			return round(deck, player, dealer)
+
+
+
+
+# while True:
+
 
 
 

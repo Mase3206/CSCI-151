@@ -101,7 +101,7 @@ class Player:
 		if len(self._hand) == 0:
 			stdio.writef("\n%s has no cards.\n", self.name)
 		else:
-			stdio.writef("\n%s's hand:\n", self.name)
+			stdio.writef("\n%s's hand:", self.name)
 			for i in range(len(self._hand)):
 				if i != len(self._hand) - 1:
 					stdio.writef("%s, ", self._hand[i])
@@ -131,7 +131,7 @@ class Player:
 		"""
 		Deals one card from the deck using `Deck.deal_card()`.
 		"""
-		self._hand += [deck.deal_card()]
+		self._hand.append(deck.deal_card())
 
 
 	def balance(self) -> int:
@@ -153,10 +153,13 @@ class Player:
 		stdio.writef("Current balance: %i\n", self.balance())
 		bet = int(input('Bet amount: '))
 
-		attempt = max(self.balance() - bet, 0)
-		self._balance = attempt
-
-		return attempt
+		if (newBal := self.balance() - bet) < 0:
+			a = self.balance()
+			self._balance = 0
+			return a
+		else:
+			self._balance = newBal
+			return bet
 		
 		
 	def win(self, winnings: int):
@@ -200,10 +203,14 @@ class Player:
 			]
 
 			for v in a:
-				if v >= 21:
+				if v > 21:
 					a.remove(v)
 			
-			return max(a)
+			# if an empty list is passed to max(), a ValueError will be thrown, so return lowest losing value
+			if a == []:
+				return total_no_aces + 1
+			else:
+				return max(a)
 		
 		elif qty_aces == 2:
 			a = stdarray.create1D(3, 0)
@@ -214,10 +221,14 @@ class Player:
 			]
 
 			for v in a:
-				if v >= 21:
+				if v > 21:
 					a.remove(v)
 			
-			return max(a)
+			# if an empty list is passed to max(), a ValueError will be thrown, so return lowest losing value
+			if a == []:
+				return total_no_aces + 2
+			else:
+				return max(a)
 		
 		else:
 			raise NotImplementedError('I haven\'t written the code to deal with 3 or more Aces in a hand.')
