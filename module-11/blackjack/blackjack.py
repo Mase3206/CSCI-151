@@ -20,6 +20,7 @@ from card import Card
 from deck import Deck
 from player import (
 	Player,
+	Dealer,
 	Name,
 	load as playerLoad,
 	save as playerSave
@@ -40,7 +41,7 @@ def initRoot() -> tuple[Deck, Player, Player]:
 	
 	"""
 	deck = Deck()
-	dealer = Player(Name('Francis', 'McDealson'), math.inf)
+	dealer = Dealer()
 	player = playerLoad()
 
 	return deck, player, dealer
@@ -50,7 +51,7 @@ def initRoot() -> tuple[Deck, Player, Player]:
 def game(
 		deck: Deck, 
 		player: Player, 
-		dealer: Player
+		dealer: Dealer
 	):
 	"""
 	Main gameloop.	
@@ -71,15 +72,15 @@ def game(
 	player.print_hand()
 	stdio.writef('Best value: %i\n', player.best_hand_value())
 
-	dv = dealer.print_first().value
-	stdio.writef('Known value: %i', dv)
+	dealer.print_first()
+	stdio.writef('Known value: %i', dealer.value_first())
 	
 
 
 def round(
 		deck: Deck,
 		player: Player,
-		dealer: Player,
+		dealer: Dealer,
 		pot: int
 	):
 	"""
@@ -87,5 +88,6 @@ def round(
 	"""
 
 
-if __name__ == '__main__':
-	game(*initRoot())
+
+# we can initialize and start the game on one line by unpacking the output of initRoot()
+game(*initRoot())

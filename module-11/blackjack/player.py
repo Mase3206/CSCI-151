@@ -113,10 +113,8 @@ class Player:
 		"""
 		Prints and returns the player's top card.
 		"""
-		if self.name.last == 'McDealson':
-			stdio.writef("\nDealer's top card: %s\n", self._hand[0])
-		else:
-			stdio.writef("\n%s's top card: %s\n", self.name, self._hand[0])
+		
+		stdio.writef("\n%s's top card: %s\n", self.name, self._hand[0])
 		return self._hand[0]
 
 
@@ -245,6 +243,44 @@ class Player:
 	# special methods
 	def __repr__(self) -> str:
 		return f"Player(name={self.name}, _balance={self._balance}, _hand={self._hand})"
+
+
+
+class Dealer(Player):
+	"""
+	Dealer class with base class Player. It has no arguments. It does have a few modified methods:
+
+	Modified methods
+	----------------
+		print_first(): The `name` field is automatically filled in as "Dealer".
+	"""
+
+	# all methods that aren't defined here are inherited from Player
+
+	def __init__(self):
+		self._hand = initialize_empty_deck()
+		self.name = Name('Francis', 'McDealson')
+		self.balance = float('inf')
+
+
+	def print_first(self) -> Card:
+		"""
+		Prints and returns the player's top card.
+		"""
+
+		stdio.writef("\nDealer's top card: %s\n", self._hand[0])
+		return self._hand[0]
+	
+	
+	def value_first(self) -> int:
+		return self._hand[0].value
+	
+
+	# special methods
+	def __repr__(self) -> str:
+		return f"Player(name={self.name}, _balance={self._balance}, _hand={self._hand})"
+	
+
 
 
 
