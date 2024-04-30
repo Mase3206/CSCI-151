@@ -72,6 +72,7 @@ def game(
 	stdio.writef('Best value: %i\n', player.best_hand_value())
 
 	dv = dealer.print_first().value
+	stdio.writef('Known value: %i', dv)
 	
 
 
