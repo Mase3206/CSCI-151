@@ -76,20 +76,20 @@ class Card:
 		return faces[face]
 	
 	
-	def get_value(self) -> int:
-		"""
-		Return card's numerical value.
+	# def get_value(self) -> int:
+	# 	"""
+	# 	Return card's numerical value.
 
-		Returns
-		-------
-			(int) numerical representation of the card's value; i.e. 1, 3, or 10
-		"""
+	# 	Returns
+	# 	-------
+	# 		(int) numerical representation of the card's value; i.e. 1, 3, or 10
+	# 	"""
 
-		return self._value
+	# 	return self.value
 	
 
-	def get_face(self) -> str:
-		return self._face
+	# def get_face(self) -> str:
+	# 	return self.face
 	
 
 	def set_value(self, face: str) -> None:
@@ -106,18 +106,18 @@ class Card:
 		"""
 
 		if face.title() in faces.keys():
-			self._face = face.title()
-			self._value = self._from_face(face.title())
+			self.face = face.title()
+			self.value = self._from_face(face.title())
 		else:
 			raise ValueError('Given face is not valid.')
 		
 	
 	# special methods
 	def __str__(self) -> str:
-		return f'{self._face} of {self.suit}'
+		return f'{self.face} of {self.suit}'
 	
 	def __repr__(self) -> str:
-		return f"Card(suit='{self.suit}', _face='{self._face}', _value={self._value})"
+		return f"Card(suit='{self.suit}', _face='{self.face}', _value={self.value})"
 	
 
 

@@ -23,9 +23,18 @@
 # p.blackjack_hand_value()	# Returns value of blackjack hand
 # p.blackjack()				# Returns True if hand is a blackjack
 
-import stdio, stdarray	# type: ignore
+import stdio	# type: ignore
+import stdarray	# type: ignore
+
 from card import Card
 from deck import Deck, initialize_empty_deck
+
+import pickle
+
+
+# define saved player file name as a Rust-style constant
+PLAYER_DATA_FILE = 'player.dat'
+
 
 
 # borrowed from a previous assignment
@@ -62,7 +71,7 @@ class Name:
 
 	# special methods
 	def __str__(self):
-		return self.fullName()
+		return self.first
 	
 
 	def __repr__(self):
@@ -90,9 +99,9 @@ class Player:
 		Print the player's entire hand.
 		"""
 		if len(self._hand) == 0:
-			stdio.writef("%s has no cards.\n", self.name.first)
+			stdio.writef("\n%s has no cards.\n", self.name)
 		else:
-			stdio.writef("%s's hand:\n", self.name.first)
+			stdio.writef("\n%s's hand:", self.name)
 			for i in range(len(self._hand)):
 				if i != len(self._hand) - 1:
 					stdio.writef("%s, ", self._hand[i])
@@ -100,15 +109,13 @@ class Player:
 					stdio.writef("%s\n", self._hand[i])
 
 
-	def print_first(self) -> None:
+	def print_first(self) -> Card:
 		"""
-		Print the player's top card.
+		Prints and returns the player's top card.
 		"""
-		if self.name.last == 'McDealson':
-			stdio.writef("Dealer's top card:\n")
-		else:
-			stdio.writef("%s's top card:\n", self.name.first)
-		stdio.writeln(self._hand[0])
+		
+		stdio.writef("\n%s's top card: %s\n", self.name, self._hand[0])
+		return self._hand[0]
 
 
 	def clear(self) -> None:
@@ -124,7 +131,7 @@ class Player:
 		"""
 		Deals one card from the deck using `Deck.deal_card()`.
 		"""
-		self._hand += [deck.deal_card()]
+		self._hand.append(deck.deal_card())
 
 
 	def balance(self) -> int:
@@ -134,103 +141,114 @@ class Player:
 		return self._balance
 	
 
-	def bet(self, amount: int) -> bool:
+	def bet(self) -> int:
 		"""
-		Attempts to bet the specified amount.
-		
-		* If the player can afford the specified amount, the amount will be subtracted from the player's balance and will return True.
-		* If the player *cannot* afford the specified amount, the player's balance will not change and will return False.
-
-		Arguments
-		---------
-			amount (int): attempted bet amount
+		Prompts the Player to enter their bet, then attempts attempts to bet the entered amount. If the Player's balance is not enough for the bet, they will automatically bet their entire balance (all in).
 
 		Returns
 		-------
-			(bool) True if `_balance` >= `amount`, False if otherwise
+			(int) amount bet, or the all-in amount
 		"""
-
-		if amount >= self._balance:
-			self._balance -= amount
-			return True
-		else:
-			return False
 		
+		stdio.writef("Current balance: %i\n", self.balance())
+		bet = int(input('Bet amount: '))
 
-	def win(self, pot: int):
+		if (newBal := self.balance() - bet) < 0:
+			a = self.balance()
+			self._balance = 0
+			return a
+		else:
+			self._balance = newBal
+			return bet
+		
+		
+	def win(self, winnings: int):
 		"""
 		Adds specified pot value to player's balance for when they win.
 
 		Arguments
 		---------
-			pot (int): value of the pot
+			winnings (int): value of the winnings. This is either 100% (win) or 150% (natural blackjack) the value of the pot.
 		"""
 
-		self._balance += pot
+		self._balance += winnings
 
 
-	def hand_values(self) -> list[int]:
+	def best_hand_value(self) -> int:
 		"""
-		Returns all possible current value(s) of the hand in an array of length 2^(count_aces).
+		Returns the best value of the hand. It will try to find the highest possible value, accounting for all Aces, reverting to lower values if one or more Aces is present.
 
 		Returns
 		-------
-			(list[int]) all possible value(s) of the hand
+			(int) best total value of the hand
 		"""
 
-		# grab the face names
-		faces = [c.get_face() for c in self._hand]
+		# count the number of aces in the hand
+		qty_aces = len([c.face for c in self._hand if c.face == 'Ace'])
 
-		# calculate the total value of all cards that *are not* aces
-		total_no_aces = sum([c.get_value() for c in self._hand if c.get_face() != 'Ace'])
+		# get the total of the hand without Aces (even if none are present)
+		total_no_aces = sum([c.value for c in self._hand if c.face != 'Ace'])
 
-		# count only the number of aces in the hand
-		count_aces = len([f for f in faces if f == 'Ace'])
-
-		possible_values: list[int] = stdarray.create1D(2 ** (count_aces), total_no_aces)
-
-
-		# just hard-code it
-		if count_aces == 0:
-			# the total_no_aces is already in there, so just return it
-			return possible_values
+		if qty_aces == 0:
+			return total_no_aces
 		
-		elif count_aces == 1:
-			possible_values = [
+		elif self.is_blackjack():
+			return 21
+
+		elif qty_aces == 1:
+			a = stdarray.create1D(2, 0)
+			a = [
 				total_no_aces + 1,
 				total_no_aces + 11
 			]
-			return possible_values
+
+			for v in a:
+				if v > 21:
+					a.remove(v)
+			
+			# if an empty list is passed to max(), a ValueError will be thrown, so return lowest losing value
+			if a == []:
+				return total_no_aces + 1
+			else:
+				return max(a)
 		
-		elif count_aces == 2:
-			possible_values = [
+		elif qty_aces == 2:
+			a = stdarray.create1D(3, 0)
+			a = [
 				total_no_aces + 2,
-				total_no_aces + 12,
 				total_no_aces + 12,
 				total_no_aces + 22
 			]
-			return possible_values
-		
-		elif count_aces > 2:
-			raise NotImplementedError('AAH! Player has more than 2 aces! I don\'t know what to do with that yet!')
+
+			for v in a:
+				if v > 21:
+					a.remove(v)
+			
+			# if an empty list is passed to max(), a ValueError will be thrown, so return lowest losing value
+			if a == []:
+				return total_no_aces + 2
+			else:
+				return max(a)
 		
 		else:
-			# TODO: this error is... well, it can't be in the final code.
-			raise Exception('Something done got fucky.')
+			raise NotImplementedError('I haven\'t written the code to deal with 3 or more Aces in a hand.')
 
 
 	def is_blackjack(self) -> bool:
 		"""
-		Checks if the player's current hand is a natural Blackjack (two Aces).
+		Checks if the player's current hand is a natural Blackjack: first two cards are an Ace and a 10.
 
 		Returns
 		-------
-			(bool) True if player has two Aces, else False
+			(bool)
 		"""
 
-		# count the number of Aces in the player's hand
-		count_aces = len([f for c in self._hand if (f := c.get_face()) == 'Ace'])
-		return True if count_aces == 2 else False		
+		if self._hand[0].face == 'Ace' and self._hand[1].face == 'Ten':
+			return True
+		elif self._hand[0].face == 'Ten' and self._hand[1].face == 'Ace':
+			return True
+		else:
+			return False
 
 
 	# special methods
@@ -239,26 +257,95 @@ class Player:
 
 
 
+class Dealer(Player):
+	"""
+	Dealer class with base class Player. It has no arguments. It does have a few modified methods:
+
+	Modified methods
+	----------------
+		print_first(): The `name` field is automatically filled in as "Dealer".
+	"""
+
+	# all methods that aren't defined here are inherited from Player
+
+	def __init__(self):
+		self._hand = initialize_empty_deck()
+		self.name = Name('Francis', 'McDealson')
+		self.balance = float('inf')
+
+
+	def print_first(self) -> Card:
+		"""
+		Prints and returns the player's top card.
+		"""
+
+		stdio.writef("\nDealer's top card: %s\n", self._hand[0])
+		return self._hand[0]
+	
+	
+	def value_first(self) -> int:
+		return self._hand[0].value
+	
+
+	# special methods
+	def __repr__(self) -> str:
+		return f"Player(name={repr(self.name)}, _balance={self._balance}, _hand={self._hand})"
+	
+
+
+
+
+def load() -> Player:
+	try:
+		with open(PLAYER_DATA_FILE, 'rb') as f:
+			stdio.writeln('Found existing player data. Loading...\n')
+			return pickle.load(f)
+
+	except FileNotFoundError:
+		stdio.writeln('Existing player data not found. Creating a new player...')
+		return Player(
+			name=Name(
+				input('First name: '),
+				input('Last name: ')
+			),
+			balance=1000
+		)
+	
+
+
+def save(player: Player):
+	try:
+		# does it exist?
+		open(PLAYER_DATA_FILE, 'rb').close()
+
+		with open(PLAYER_DATA_FILE, 'wb') as f:
+			player.clear()
+			pickle.dump(player, f)
+			
+	except FileNotFoundError:
+		open(PLAYER_DATA_FILE, 'wb').close()
+		
+		with open(PLAYER_DATA_FILE, 'wb') as f:
+			player.clear()
+			pickle.dump(player, f)
+
+
+
 def _tc():
 	testDeck = Deck()
 	p = Player(Name('Noah', 'Roberts'), 1000.0)
-	p.deal_card(testDeck)
-	p.deal_card(testDeck)
-	p.print_hand()
-
-	# manually add an Ace to check low/high card value func
+	p._hand.append(Card('Spades', 'Ten'))
 	p._hand.append(Card('Spades', 'Ace'))
-	# p.clear()
-	p.print_hand()
-	print(p.hand_values())
 	print(p.is_blackjack())
-	print(repr(p))
 
 	p.clear()
-	p._hand.append(Card('clubs', 'ace'))
-	p._hand.append(Card('diAmondS', 'aCe'))
-	print(p.hand_values())
+	p._hand.append(Card('Spades', 'Five'))
+	p._hand.append(Card('Spades', 'Ace'))
+	print(p.best_hand_value())
+
+	p._hand.append(Card('Spades', 'Ace'))
 	print(p.is_blackjack())
+	print(p.best_hand_value())
 	
 
 if __name__ == '__main__':

@@ -12,201 +12,186 @@
 # =============================================================================
 
 import math
-import pickle
 
-import stdarray  # type: ignore
-import stdio  # type: ignore
+import stdio	# type: ignore
+import stdarray	# type: ignore
+
+from card import Card
 from deck import Deck
-from player import Name, Player
+from player import (
+	Player,
+	Dealer,
+	Name,
+	load as playerLoad,
+	save as playerSave
+)
 
 
-# global constants, Rust-style
-PLAYER_DATA_FILE = 'player.dat'
 
-
-
-def winCheck(player: Player, dealer: Player) -> str:
+def initRoot() -> tuple[Deck, Player, Dealer]:
 	"""
-	Check if player wins round by checking player and dealer hand values. 
-
-	1. If natural blackjack, player automatically wins. 
-	2. If player over 21, dealer wins.
-	3. If dealer over 21, player wins.
-	4. If both over 21, neither wins (tie, a.k.a. "push")
-	"""
-
-	playerValues = player.hand_values()
-	dealerValues = dealer.hand_values()
-	# playerUnder = stdarray.create1D(0)
-	# dealerUnder = stdarray.create1D(0)
-
-	if player.is_blackjack():
-		return 'player'
-	else:
-		playerUnder = [v for v in playerValues if v <= 21]
-		dealerUnder = [v for v in dealerValues if v <= 21]
-
-		if len(playerUnder) == 0 and len(dealerUnder) == 0:
-			return 'push'
-		elif len(playerUnder) > len(dealerUnder):
-			return 'player'
-		elif len(playerUnder) < len(dealerUnder):
-			return 'dealer'
-		elif len(playerUnder) == len(dealerUnder):
-			return 'no winner'
-		else:
-			raise Exception('This should never run!')
-
-
-
-def round(player: Player, dealer: Player, deck: Deck):
-	"""
-	Single round. 
-
-	Stand
-	-----
-	1. Draw card
-	2. Check hand value. 
-	3. If natural blackjack, automatically win. 
-	4. If over 21, go to WIN_CHECK.
-	 
-	Call
-	----
-	1. Run winCheck().
-	"""
-
-	player.deal_card(deck)
-	player.deal_card(deck)
-	player.print_hand()
-
-	dealer.deal_card(deck)
-	dealer.deal_card(deck)
-	dealer.print_first()
-
-
-	choice = input('(1) stand, (2) call, or (q) quit? ')
-
-	if choice.lower() == 'q':
-		return 'quit'
-	
-	# stand
-	elif choice == '1':
-		while True:
-			if winCheck(player, dealer) == 'no winner':
-				# print(winCheck(player, dealer))
-				dealer.deal_card(deck)
-			else:
-				stdio.writef('\nWinner: %s\n', winCheck(player, dealer))
-				stdio.writef("Player's hand value: %s\nDealer's hand value: %s\n", player.hand_values(), dealer.hand_values())
-				player.clear()
-				dealer.clear()
-				return winCheck(player, dealer)
-
-	elif choice == '2':
-		return "call"
-
-
-
-def game(player: Player, dealer: Player, deck: Deck):
-	"""
-	Main game loop.
-	"""
-
-	q = False
-	while not q:
-		stdio.writef("%s's balance: %i\n", player.name.first, player.balance())
-		pot = int(input('Bet amount: ')) * 2
-		player.bet(pot / 2)
-
-		o = round(player, dealer, deck)
-		if o == 'quit':
-			q = True
-		elif o == 'player':
-			player.win(int(pot * 1.0))
-		elif 0 == 'natural':
-			player.win(int(pot * 1.5))
-
-		
-
-
-
-def loadPlayer():
-	"""
-	Load Player object. 
-
-	It will first try to load an existing Player from PLAYER_DATA_FILE. If the file is not found, it will prompt the user to enter their first and last name to initialize the Player. It then returns either the existing or new Player object.
+	Initializes the root of the program:
+	* Creates the deck
+	* Creates the dealer Player object
+	* Loads the player Player object via player.load()
 
 	Returns
 	-------
-		(Player) player object 
-	"""
-
-	try:
-		with open(PLAYER_DATA_FILE, 'rb') as f:
-			# try to load existing data
-			existingData: Player = pickle.load(f)
-			useExisting = input('Found existing player data. Would you like to use it? [Y/n] ')
-			if useExisting.lower() == 'y' or useExisting == '':
-				player = existingData
-				player.clear()
-			else:
-				exit(1)
+		tuple: deck, player, dealer
 	
-	except FileNotFoundError:
-		# create new dat file
-		open(PLAYER_DATA_FILE, 'a').close()
+	"""
+	deck = Deck()
+	dealer = Dealer()
+	player = playerLoad()
 
-		# get the new player's data
-		stdio.writeln('Existing player data not found.')
-		playerName = Name(
-			first=input("What's your first name? "),
-			last=input("What's your last name? ")
-		)
-		stdio.writeln('Creating new player with default balance of $1000.')
-		player = Player(playerName, 1000)
+	return deck, player, dealer
 
-		# save that data
-		savePlayer(player)
+
+
+def reset(player: Player, dealer: Dealer) -> tuple[Deck, Player, Dealer]:
+	"""
+	Reset the deck, dealer's hand, and player's hand for the next game.
+	"""
+
+	deck = Deck()
+	dealer.clear()
+	player.clear()
+
+	return deck, player, dealer
+
+
+
+def game(
+		deck: Deck, 
+		player: Player, 
+		dealer: Dealer
+	):
+	"""
+	Main gameloop.	
+	"""
+
+	player.clear()
+	dealer.clear()
+
+	# bet
+	pot = player.bet() * 2
+
+	# deal cards
+	player.deal_card(deck)
+	player.deal_card(deck)
+	dealer.deal_card(deck)
+	dealer.deal_card(deck)
+
+	player.print_hand()
+	stdio.writef('Best value: %i\n', player.best_hand_value())
+
+	dealer.print_first()
+	stdio.writef('Known value: %i', dealer.value_first())
+
+
+	deck, player, dealer = round(deck, player, dealer)
+	p = player.best_hand_value()
+	d = dealer.best_hand_value()
+
+	if player.is_blackjack():
+		# win: natural blackjack
+		player.win(int(pot * 1.5))
+		stdio.writef("\n%s wins with a natural Blackjack!\n", player.name)
+		return deck, player, dealer
+
+	elif p > 21:
+		# lose: player over 21
+		stdio.writef("\n%s loses from going over 21!\n", player.name)
+		return deck, player, dealer
+
+	elif d > 21:
+		# win: dealer over 21
+		player.win(pot)
+		stdio.writef("\n%s wins from the dealer's hand going over 21!\n", player.name)
+		return deck, player, dealer
+
+	elif p > d:
+		# win: player greater than dealer
+		player.win(pot)
+		stdio.writef("\n%s wins with a hand less than 21 and greater than the dealer's!\n", player.name)
+		return deck, player, dealer
+
+	elif p < d:
+		# lose: player less than dealer
+		stdio.writef("\n%s loses with a hand less than 21 but less than the dealer's!\n", player.name)
+		return deck, player, dealer
+
+	elif p == d:
+		# bust: player equal to dealer
+		stdio.writef("\n%s busts with a hand equal to the dealer's!\n", player.name)
+		player.win(pot // 2)
+		return deck, player, dealer
+
 	
-	return player
 
 
+	
 
-def savePlayer(player: Player):
+
+def round(
+		deck: Deck,
+		player: Player,
+		dealer: Dealer
+	):
 	"""
-	Save the Player object to PLAYER_DATA_FILE.
-
-	Arguments
-	---------
-		player (Player): player object to save
+	One round of Blackjack. In each round, the player can choose to Hit or Stand.
 	"""
 
-	# this'll only work if the file already exists (which it should)
-	with open(PLAYER_DATA_FILE, 'wb') as f:
-		pickle.dump(player, f)
 
+	choice = input("\n(h) Hit or (s) Stand? ")
+	# stand
+	if choice.lower() == 's':
+		while True:
+			if dealer.best_hand_value() > 17:
+				break
+			dealer.deal_card(deck)
+		return deck, player, dealer
+
+	# hit
+	elif choice.lower() == 'h':
+		player.deal_card(deck)
+		player.print_hand()
+		hv = player.best_hand_value()
+		# if player's hand value is over 21
+		if hv > 21:
+			return deck, player, dealer
+		else:
+			stdio.writef('Best value with new card: %i\n', hv)
+
+			dealer.print_first()
+			stdio.writef('Known value: %i', dealer.value_first())
+
+			# it's all done recursively
+			return round(deck, player, dealer)
 
 
 def main():
-	# load player data
-	deck = Deck()
-	player = loadPlayer()
-	dealer = Player(Name('Francis', 'McDealson'), math.inf)
-	stdio.writeln()
-	
-	q = False
-	while not q:
-		o = game(player, dealer, deck)
-		if o == 'quit':
-			q = True
+	deck, player, dealer = initRoot()
+
+	while True:
+		# we can initialize and start the game on one line by unpacking the output of initRoot()
+		deck, player, dealer = game(deck, player, dealer)
+
+		cont = input('\nWould you like to play another game? [Y/n] ').lower()
+		if cont == 'y' or cont == '':
+			continue
+		else:
+			save = input('Would you like to save your balance to be used later? This will create a `player.dat` file in your current directory. [Y/n] ').lower()
+			if save == 'y' or save == '':
+				stdio.writeln('Saving...')
+				playerSave(player)
+				exit(0)
+			else:
+				exit(0)
 
 
-
-# def _tc():
-# 	stdio.writeln('Success!')
-
-# if __name__ == '__main__':
-# 	_tc()
-
-
-main()
+try:
+	main()
+except KeyboardInterrupt:
+	stdio.writeln('\nForce quit!')
+	exit(1)
