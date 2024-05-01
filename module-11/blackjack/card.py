@@ -85,8 +85,12 @@ class Card:
 			face (str): string representation of the card's value; i.e. 'Ace', 'Three', or 'Jack' 
 		"""
 
+		# verify that the given face is actually valid
 		if face.title() in faces.keys():
+			# make sure the set face value is in title case
 			self.face = face.title()
+
+			# find the card's value from the given face
 			self.value = self._from_face(face.title())
 		else:
 			raise ValueError('Given face is not valid.')
