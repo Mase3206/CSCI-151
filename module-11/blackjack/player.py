@@ -114,7 +114,7 @@ class Player:
 		if len(self._hand) == 0:
 			stdio.writef("\n%s has no cards.\n", self.name)
 		else:
-			stdio.writef("\n%s's hand:", self.name)
+			stdio.writef("\n%s's hand: ", self.name)
 			for i in range(len(self._hand)):
 				if i != len(self._hand) - 1:
 					stdio.writef("%s, ", self._hand[i])
@@ -182,11 +182,13 @@ class Player:
 		if (newBal := self.balance() - bet) < 0:
 			a = self.balance()
 			self._balance = 0
+			stdio.writef("\n%s doesn't have enough money for that bet, so he'll go all in. New bet: %i\n", self.name, a)
 			return a
 		
 		# if the player does have the funds, subtract the input amount from their balance and return the bet amount.
 		else:
 			self._balance = newBal
+			stdio.writef("\n%s bets %i.\n", self.name, bet)
 			return bet
 		
 		
@@ -311,6 +313,21 @@ class Dealer(Player):
 		# changes this method to print "Dealer" instead of f"{str(self.name)}
 		stdio.writef("\nDealer's top card: %s\n", self._hand[0])
 		return self._hand[0]
+	
+
+	def print_hand(self) -> None:
+		"""
+		Print the player's entire hand.
+		"""
+		if len(self._hand) == 0:
+			stdio.writef("\nThe Dealer has no cards.\n")
+		else:
+			stdio.writef("\nDealer's hand: ")
+			for i in range(len(self._hand)):
+				if i != len(self._hand) - 1:
+					stdio.writef("%s, ", self._hand[i])
+				else:
+					stdio.writef("%s\n", self._hand[i])
 	
 	
 	def value_first(self) -> int:
