@@ -11,18 +11,6 @@
 # for Module 11
 # =============================================================================
 
-# Player(name, balance)		# Create a player with a name, balance and hand
-# p.print_hand()			# Prints player’s hand
-# p.print_first()			# Prints only first card of player’s hand
-# p.clear()					# Clears player’s hand
-# p.deal_card(d)			# Adds a card to players hand from deck d
-# p.print_balance()			# Prints the player’s balance
-# p.get_balance()			# Returns the player’s balance
-# p.bet(amount)				# Returns True and subtracts amount from player’s balance if player’s balance >= amount, Returns False otherwise
-# p.win(amount)				# Adds amount to player’s balance
-# p.blackjack_hand_value()	# Returns value of blackjack hand
-# p.blackjack()				# Returns True if hand is a blackjack
-
 import stdio	# type: ignore
 import stdarray	# type: ignore
 
@@ -56,6 +44,18 @@ class Name:
 
 	
 	def middle(self, initial=False):
+		"""
+		Return middle name if given when initialized. If given is length 1 or Name.middle() is called with initial=True, returned value is an initial. If not, returned value is the full middle name
+
+		Arguments
+		---------
+			initial (bool; default False): return middle name as initial. ex: "A. "
+		
+		Returns
+		-------
+			(str) middle name or initial
+		"""
+
 		if self._middle == '':
 			return ''
 		elif len(self._middle) == 1 or initial == True:
@@ -65,6 +65,18 @@ class Name:
 
 
 	def fullName(self, useMiddleInitial=False):
+		"""
+		Return the full name. 
+
+		Arguments
+		---------
+			useMiddleInitial (bool; default False): interpret middle name as an initial
+
+		Returns
+		-------
+			(str) full name, including first, middle (if present), and last
+		"""
+
 		middle = self.middle(initial=useMiddleInitial)
 		return f'{self.first} {middle}{self.last}'
 	
@@ -112,6 +124,10 @@ class Player:
 	def print_first(self) -> Card:
 		"""
 		Prints and returns the player's top card.
+
+		Returns
+		-------
+			(Card) the Player's top card
 		"""
 		
 		stdio.writef("\n%s's top card: %s\n", self.name, self._hand[0])
@@ -120,7 +136,7 @@ class Player:
 
 	def clear(self) -> None:
 		"""
-		Clear's the player's hand.
+		Clear's the player's hand. Used at the end of each game and before saving the user's name and balance.
 		"""
 		# make sure _hand is good and gone before re-creating it
 		del self._hand
@@ -130,13 +146,21 @@ class Player:
 	def deal_card(self, deck: Deck) -> None:
 		"""
 		Deals one card from the deck using `Deck.deal_card()`.
+
+		Arguments
+		---------
+			deck (Deck): the deck to deal a card from
 		"""
 		self._hand.append(deck.deal_card())
 
 
 	def balance(self) -> int:
 		"""
-		Returns player's current balance.
+		Returns player's current balance. It's a pointless method that could be eliminated, but I digress.
+
+		Returns
+		-------
+			(int) Player's balance
 		"""
 		return self._balance
 	
@@ -153,10 +177,13 @@ class Player:
 		stdio.writef("Current balance: %i\n", self.balance())
 		bet = int(input('Bet amount: '))
 
+		# if the player does not have the funds to bet the input amount, automatically make an "all in" bet and set their balance to zero.
 		if (newBal := self.balance() - bet) < 0:
 			a = self.balance()
 			self._balance = 0
 			return a
+		
+		# if the player does have the funds, subtract the input amount from their balance and return the bet amount.
 		else:
 			self._balance = newBal
 			return bet
@@ -243,6 +270,7 @@ class Player:
 			(bool)
 		"""
 
+		# account for both permutations
 		if self._hand[0].face == 'Ace' and self._hand[1].face == 'Ten':
 			return True
 		elif self._hand[0].face == 'Ten' and self._hand[1].face == 'Ace':
@@ -279,11 +307,15 @@ class Dealer(Player):
 		Prints and returns the player's top card.
 		"""
 
+		# changes this method to print "Dealer" instead of f"{str(self.name)}
 		stdio.writef("\nDealer's top card: %s\n", self._hand[0])
 		return self._hand[0]
 	
 	
 	def value_first(self) -> int:
+		"""
+		Simple method to return the value of the Dealer's top card.
+		"""
 		return self._hand[0].value
 	
 
@@ -296,6 +328,13 @@ class Dealer(Player):
 
 
 def load() -> Player:
+	"""
+	Load the Player object: try loading from file (if exists) and return it; if not, create Player and return it.
+
+	Returns
+	-------
+		(Player) new or previously-saved Player object
+	"""
 	try:
 		with open(PLAYER_DATA_FILE, 'rb') as f:
 			stdio.writeln('Found existing player data. Loading...\n')
@@ -314,17 +353,28 @@ def load() -> Player:
 
 
 def save(player: Player):
+	"""
+	Save the Player in the PLAYER_DATA_FILE global constant specified in player.py (should be 'player.dat'), creating the file if not present.
+
+	Arguments
+	---------
+		player (Player): Player object to save
+	"""
 	try:
 		# does it exist?
 		open(PLAYER_DATA_FILE, 'rb').close()
 
+		# if exist, write to it
 		with open(PLAYER_DATA_FILE, 'wb') as f:
 			player.clear()
 			pickle.dump(player, f)
-			
+		
+	# if no exist, make it
 	except FileNotFoundError:
+		# make file
 		open(PLAYER_DATA_FILE, 'wb').close()
 		
+		# write to file
 		with open(PLAYER_DATA_FILE, 'wb') as f:
 			player.clear()
 			pickle.dump(player, f)
@@ -332,6 +382,9 @@ def save(player: Player):
 
 
 def _tc():
+	"""
+	Test client; not part of API.
+	"""
 	testDeck = Deck()
 	p = Player(Name('Noah', 'Roberts'), 1000.0)
 	p._hand.append(Card('Spades', 'Ten'))
