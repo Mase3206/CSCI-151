@@ -11,17 +11,12 @@
 # for Module 11
 # =============================================================================
 
-import math
-
 import stdio	# type: ignore
-import stdarray	# type: ignore
 
-from card import Card
 from deck import Deck
 from player import (
 	Player,
 	Dealer,
-	Name,
 	load as playerLoad,
 	save as playerSave
 )
