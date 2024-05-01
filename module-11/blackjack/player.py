@@ -85,10 +85,10 @@ class Name:
 	def __str__(self):
 		return self.first
 	
-
 	def __repr__(self):
 		return f'Name(first={self.first}, last={self.last}, _middle={self._middle})'
 	
+
 
 class Player:
 	"""
@@ -99,6 +99,7 @@ class Player:
 		name (Name): player's name in a Name class (also defined in this file).
 		balance (int): player's starting balance.	
 	"""
+
 	def __init__(self, name: Name, balance: int):
 		self.name = name
 		self._balance = balance
@@ -325,8 +326,6 @@ class Dealer(Player):
 	
 
 
-
-
 def load() -> Player:
 	"""
 	Load the Player object: try loading from file (if exists) and return it; if not, create Player and return it.
@@ -360,6 +359,7 @@ def save(player: Player):
 	---------
 		player (Player): Player object to save
 	"""
+	
 	try:
 		# does it exist?
 		open(PLAYER_DATA_FILE, 'rb').close()
