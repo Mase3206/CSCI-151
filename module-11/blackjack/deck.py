@@ -11,21 +11,20 @@
 # for Module 11
 # =============================================================================
 
-# Deck()					# Create a shuffled deck of 52 cards
-# d.print_deck()			# Method was added for test client
-# d.deal()				# Returns and removes card from deck
-# d.deck_size()			# Returns size of deck
-
-
 from card import Card, suits, faces
 import stdarray	# type: ignore
 import random
 import stdio	# type: ignore
 
 
+
 def initialize_empty_deck() -> list[Card]:
-	# the initialized Card object in this line helps with PyLance's type annotations
+	"""
+	Return a list of type list[Card] of length zero. Helps with Pylance's linting.
+	"""
+
 	return stdarray.create1D(0, Card('Hearts', 'Ace'))
+
 
 
 class Deck:
@@ -63,11 +62,14 @@ class Deck:
 		"""
 
 		i_card = random.randint(0, max(len(self._deck)-1, 1))
-		# i_card = 0
+
+		# try to grab that card from the deck
+		# I was having an issue where it wouldn't find the card, so this try-except block helps return a more helpful error
 		try:
 			value_card = self._deck[i_card]
 		except IndexError:
 			raise IndexError(f'Index {i_card} is not in self._deck (len={len(self._deck)}, max index={len(self._deck)-1})')
+		
 		self._deck.pop(i_card)
 		return value_card
 	
@@ -85,6 +87,9 @@ class Deck:
 
 
 def _tc():
+	"""
+	Test client; not part of API.
+	"""
 	d = Deck()
 	# d._print_deck()
 	print(len(d))
