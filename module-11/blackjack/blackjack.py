@@ -30,11 +30,16 @@ def initRoot() -> tuple[Deck, Player, Dealer]:
 	* Creates the dealer Player object
 	* Loads the player Player object via player.load()
 
+	Only runs when blackjack.py is ran.
+
 	Returns
 	-------
-		tuple: deck, player, dealer
+		(Deck): re-initialized deck
+		(Player): same Player with a cleared hand
+		(Dealer): same Dealer with a cleared hand
 	
 	"""
+
 	deck = Deck()
 	dealer = Dealer()
 	player = playerLoad()
@@ -45,7 +50,18 @@ def initRoot() -> tuple[Deck, Player, Dealer]:
 
 def reset(player: Player, dealer: Dealer) -> tuple[Deck, Player, Dealer]:
 	"""
-	Reset the deck, dealer's hand, and player's hand for the next game.
+	Reset the deck, dealer's hand, and player's hand for the next game. Used after each game.
+
+	Arguments
+	---------
+		player (Player): the Player object
+		dealer (Dealer): the Dealer object - basically a Player with some special methods 
+	
+	Returns
+	-------
+		(Deck): re-initialized deck
+		(Player): same Player with a cleared hand
+		(Dealer): same Dealer with a cleared hand
 	"""
 
 	deck = Deck()
@@ -62,7 +78,13 @@ def game(
 		dealer: Dealer
 	):
 	"""
-	Main gameloop.	
+	Main gameloop. Recursively runs each round until both the Player and Dealer stand, determines who won, and awards the money accordingly.
+
+	Arguments
+	---------
+		deck (Deck): the Deck used by the Player and Dealer
+		player (Player): the Player object
+		dealer (Dealer): the Dealer object - basically a Player with some special methods 
 	"""
 
 	player.clear()
@@ -77,14 +99,19 @@ def game(
 	dealer.deal_card(deck)
 	dealer.deal_card(deck)
 
+	# display the player's hand and the hand value
 	player.print_hand()
 	stdio.writef('Best value: %i\n', player.best_hand_value())
 
+	# display the dealer's top card and its value
 	dealer.print_first()
 	stdio.writef('Known value: %i', dealer.value_first())
 
 
+	# run round recursively
 	deck, player, dealer = round(deck, player, dealer)
+
+	# get the hand values now to avoid excessive module calls
 	p = player.best_hand_value()
 	d = dealer.best_hand_value()
 
@@ -135,8 +162,13 @@ def round(
 	):
 	"""
 	One round of Blackjack. In each round, the player can choose to Hit or Stand.
-	"""
 
+	Arguments
+	---------
+		deck (Deck): the Deck used by the Player and Dealer
+		player (Player): the Player object
+		dealer (Dealer): the Dealer object - basically a Player with some special methods
+	"""
 
 	choice = input("\n(h) Hit or (s) Stand? ")
 	# stand
@@ -166,6 +198,10 @@ def round(
 
 
 def main():
+	"""
+	The main function that runs everything. It initializes the game with initRoot(), starts the game loop, and offers to save the player when they decide to quit. 
+	"""
+	
 	deck, player, dealer = initRoot()
 
 	while True:
@@ -185,6 +221,7 @@ def main():
 				exit(0)
 
 
+# Handle keyboard interrupts by printing "Force quit!" and exiting the program instead of raising an Exception and spitting out a lengthy stack trace
 try:
 	main()
 except KeyboardInterrupt:
