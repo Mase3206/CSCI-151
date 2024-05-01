@@ -75,22 +75,6 @@ class Card:
 		# grab the value associated with the face
 		return faces[face]
 	
-	
-	# def get_value(self) -> int:
-	# 	"""
-	# 	Return card's numerical value.
-
-	# 	Returns
-	# 	-------
-	# 		(int) numerical representation of the card's value; i.e. 1, 3, or 10
-	# 	"""
-
-	# 	return self.value
-	
-
-	# def get_face(self) -> str:
-	# 	return self.face
-	
 
 	def set_value(self, face: str) -> None:
 		"""
@@ -99,10 +83,6 @@ class Card:
 		Arguments
 		---------
 			face (str): string representation of the card's value; i.e. 'Ace', 'Three', or 'Jack' 
-
-		Returns
-		-------
-			None
 		"""
 
 		if face.title() in faces.keys():
@@ -122,6 +102,9 @@ class Card:
 
 
 def _tc():
+	"""
+	Test client; not part of API.
+	"""
 	a = Card('Spades', 'King')
 	print(a)
 	print(repr(a))
