@@ -218,7 +218,7 @@ def main():
 				deck = Deck()
 			continue
 		else:
-			stdio.writef("\n%s's remaining balance: %i", player.name, player.balance())
+			stdio.writef("\n%s's remaining balance: %i\n", player.name, player.balance())
 			save = input('Would you like to save your balance to be used later? This will create a `player.dat` file in your current directory. [Y/n] ').lower()
 			if save == 'y' or save == '':
 				stdio.writeln('Saving...')
